@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<catalog>
+<App name="docky" ppa="ppa:docky-core/ppa">
+   <Comment>
+      Docky.
+   </Comment>
+</App>
+<App name="vim" ppa="">
+   <Comment>
+      vim
+   </Comment>
+</App>
+</catalog>
