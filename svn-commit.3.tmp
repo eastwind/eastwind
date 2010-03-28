@@ -1,0 +1,6 @@
+add emacsbackup&recover.py, a script for backup and recover emacs lisp files and configure file.
+--This line, and those below, will be ignored--
+
+AM   emacsbackup&recover.py
+M    listing.pyc
+M    cmdlib.pyc
