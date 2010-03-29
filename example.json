@@ -1,0 +1,13 @@
+{
+   "Apps":
+   [
+      {
+         "name": "docky",
+         "ppa" : "ppa:docky-core/ppa"  
+      },
+      {
+         "name": "vim",
+         "ppa" : ""
+      }
+   ]
+}
