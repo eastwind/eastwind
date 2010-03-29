@@ -5,15 +5,14 @@ ans=''
 print "Backup or recover?(b/r)"
 ans=raw_input().strip()
 print "where is your emacs lisp file directory?"
-lisp_dir=raw_input()
+lisp_dir=raw_input()#todo need to remove / at end
 
 if (ans=='b'):
     print "Backing up your .emacs and emacs lisp"
     os.system("rm -rf ./emacs")
     os.system("mkdir emacs")
-    os.system("mkdir emacs/lisp")
     os.system("cp -p ~/.emacs ./emacs ")
-    os.system("cp -pr "+lisp_dir.strip()+"/* ./emacs/lisp")
+    os.system("cd "+lisp_dir.strip()+" && tar -jpcv -f ~/backup/emacs/lisp.tar.bz2 ./*")
     
 
 if (ans=='r'):
@@ -22,4 +21,4 @@ if (ans=='r'):
     os.system("rm ~/.emacs")
     os.system("mkdir "+lisp_dir.strip())	
     os.system("cp -p ./emacs/.emacs ~/")
-    os.system("cp -pr ./emacs/lisp/* "+lisp_dir.strip())
+    os.system("tar -jxv -f ./emacs/lisp.tar.bz2 -C "+ lisp_dir.strip())
