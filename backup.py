@@ -8,10 +8,10 @@ import time
 Backup scripts and setting.
 """
 
-def backup_path(file):
+def backup_path(file,dest):
     """ Hash the filename with time variant. """
-    hashed = hashlib.sha1("%s-%f" % file, time.time()).hexdigest()
-    return "%s/%s.tar.bz2" % os.path.abspath(os.path.expanduser(dest)),hashed
+    hashed = hashlib.sha1("%s-%f" % (file, time.time())).hexdigest()
+    return "%s/%s.tar.bz2" %( os.path.abspath(os.path.expanduser(dest)),hashed)
 
 def backup(file, dest):
     """ Backup the files to destination. """
@@ -21,7 +21,7 @@ def backup(file, dest):
 
     print "Start to tar %s" % file
     """ Tar the target into a single file """
-    os.system("cd %s && tar -jpc -f %s ./%s" % (os.path.split(os.path.abspath(file))[0], dest, os.path.split(os.path.abspath(file))[1]))
+    os.system("cd %s && tar -jpc -f %s ./%s" % (os.path.split(os.path.abspath(file))[0], backup_path(file,dest), os.path.split(os.path.abspath(file))[1]))
     print "Backup success"
 
 def recover(file, dest):
