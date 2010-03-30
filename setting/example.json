@@ -9,5 +9,11 @@
          "name": "vim"
       }
    ]
+   "Backup":
+   [
+      {
+         "path": "~/.bashrc"
+      }
+   ]
 }
 

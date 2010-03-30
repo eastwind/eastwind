@@ -19,6 +19,7 @@ for jsons in os.listdir('setting'):
             install_list.append(t["name"])
         if "ppa" in t:
             ppa_list.append(t["ppa"])
+    for t in s.info['Backup']
 
 for i in ppa_list:
     os.system("add-apt-repository %s" % i)
