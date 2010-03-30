@@ -3,11 +3,11 @@
    [
       {
          "name": "docky",
-         "ppa" : "ppa:docky-core/ppa"  
+         "ppa" : "ppa:docky-core/ppa"
       },
       {
-         "name": "vim",
-         "ppa" : ""
+         "name": "vim"
       }
    ]
 }
+
