@@ -9,6 +9,7 @@ import re
 
 ppa_list = []
 install_list = []
+backup_list = Jsoninfo('backup.json')
 
 for jsons in os.listdir('setting'):
     if re.match("[^.]*.json", jsons) == None:
@@ -20,6 +21,12 @@ for jsons in os.listdir('setting'):
         if "ppa" in t:
             ppa_list.append(t["ppa"])
     for t in s.info['Backup']
+        if "path" in t:
+            backup_list.info['Path'].append({"path": t["path"], "backuped": backup_path(t["path"])})
+
+""" Backup files """
+for i in backup_path.info['Path']:
+    backup(i["path"], i["backuped"])
 
 for i in ppa_list:
     os.system("add-apt-repository %s" % i)
