@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import os
 import shutil
 import hashlib
@@ -19,7 +18,6 @@ def backup(file):
     if os.path.exists(file) == False:
         print "    %s does not exist!" % file
         return
-
     print "    Start to tar %s" % file
     """ Tar the target into a single file """
     filename = backup_path(file)
@@ -34,6 +32,9 @@ def recover(file, dest):
     if os.path.exists(file) == False:
         print "    %s is disappeared!" % file
         return
+    if os.path.exists(dest) == False:
+        print "    %s does not exist, make it." %dest
+        os.makedir(os.path.expanduser(dest))
     print "    Start to recover %s " % file
     os.system("tar -xjp -f %s -C %s" % (file,os.path.split(dest)[0]))
     print "    Recovering %s success" % file
