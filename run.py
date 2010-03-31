@@ -16,10 +16,9 @@ class EastWind:
 
     def __init__(self):
         if sys.argv[1] == "backup":
-            self.load()
             self.clean_backup()
+            self.load()
             self.backup()
-            #print self.backup_list.info
         elif len(sys.argv) == 1:
             self.load()
             self.recover()
@@ -36,7 +35,7 @@ class EastWind:
             if re.match("[^.]*.json", jsons) == None:
                 continue
             s = JsonInfo('setting/%s' % jsons)
-            print "    Loading %s" % s
+            print "    Loading %s" % jsons
             for t in s.info['Apps']:
                 if "name" in t:
                     self.install_list.append(t["name"])
@@ -52,12 +51,13 @@ class EastWind:
 
     def clean_backup(self):
         #open("backup.json", 'w').close()
+        os.remove("backup.json")
         self.backup_list = JsonInfo("backup.json")
         """ TODO: delete brz2 """
 
     def backup(self):
         """ Backup files """
-        print " Start to backup files:"
+        print "Start to backup files:"
         for i in self.backup_list.info['Path']:
             print "%s" % i["path"]
             i["backuped"] = backup(i["path"])
