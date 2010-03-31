@@ -5,6 +5,7 @@ This library deals with I/O of information between files and program.
 """
 
 import json
+import os
 
 class JsonInfo:
    """ This class read information from an json file.  """
@@ -15,6 +16,9 @@ class JsonInfo:
    def __init__( self , _file = None ):
       self.file = _file
       if self.file != None:
+         if os.path.exists(self.file) == False:
+            self.info = {"Path":[]}
+            self.write()
          self.read()
 
    def read( self , _file = None ):

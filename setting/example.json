@@ -12,12 +12,16 @@
    "Backup":
    [
       {
-	 "name": "emacs",
-	 "path": ["~/.emacs","~/.emacs.d"]
+	     "name": "bash",
+	     "path": "~/.bashrc"
+	  },
+	  {
+	     "name": "emacs",
+	     "path": ["~/.emacs","~/.emacs.d"]
       },
       {
-	 "name": "gnome",
-	 "path": ["~/.gnome2","~/gconf"]
+	     "name": "gnome",
+	     "path": ["~/.gnome2","~/gconf"]
       }
    ]
 }
