@@ -8,12 +8,16 @@
       {
          "name": "vim"
       }
-   ]
+   ],
    "Backup":
    [
       {
-	 "name": "emacs"
+	 "name": "emacs",
 	 "path": ["~/.emacs","~/.emacs.d"]
+      },
+      {
+	 "name": "gnome",
+	 "path": ["~/.gnome2","~/gconf"]
       }
    ]
 }
