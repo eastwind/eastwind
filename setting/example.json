@@ -21,7 +21,7 @@
       },
       {
 	     "name": "gnome",
-	     "path": ["~/.gnome2","~/gconf"]
+	     "path": ["~/.gnome2","~/.gconf"]
       }
    ]
 }

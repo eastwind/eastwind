@@ -15,16 +15,16 @@ class EastWind:
     backup_list = JsonInfo('backup.json')
 
     def __init__(self):
-        if sys.argv[1] == "backup":
-            self.clean_backup()
-            self.load()
-            self.backup()
-        elif len(sys.argv) == 1:
+        if len(sys.argv) == 1:
             self.load()
             self.recover()
             self.source()
             self.update()
             self.install()
+        elif sys.argv[1] == "backup":
+            self.clean_backup()
+            self.load()
+            self.backup()
         else:
             print "The argument is not correct!"
 
@@ -32,7 +32,7 @@ class EastWind:
         """ Loads all the settings from ./setting """
         print "Start loading settings:"
         for jsons in os.listdir('setting'):
-            if re.match("[^.]*.json", jsons) == None:
+            if re.match("[^.]*.json$", jsons) == None:
                 continue
             s = JsonInfo('setting/%s' % jsons)
             print "    Loading %s" % jsons
@@ -50,21 +50,23 @@ class EastWind:
                         self.backup_list.info['Path'].append({"path": t['path']})
 
     def clean_backup(self):
-        #open("backup.json", 'w').close()
+        os.system("rm backup/*.tar.bz2")
         os.remove("backup.json")
         self.backup_list = JsonInfo("backup.json")
-        """ TODO: delete brz2 """
 
     def backup(self):
         """ Backup files """
         print "Start to backup files:"
         for i in self.backup_list.info['Path']:
-            print "%s" % i["path"]
+            print "  %s" % i["path"]
             i["backuped"] = backup(i["path"])
         self.backup_list.write()
 
     def recover(self):
         """ Recover files """
+        for i in self.backup_list.info['Path']:
+            if 'backuped' in i:
+                recover(i['backuped'], i['path'])
 
     def source(self):
         print "Start adding sources:"

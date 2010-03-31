@@ -17,7 +17,8 @@ def backup(file):
     """ Backup the files to destination. """
     file = os.path.expanduser(file)
     if os.path.exists(file) == False:
-        raise RuntimeError("The file you want to backup does not exist!")
+        print "    %s does not exist!" % file
+        return
 
     print "    Start to tar %s" % file
     """ Tar the target into a single file """
@@ -27,12 +28,14 @@ def backup(file):
     return filename
 
 def recover(file, dest):
-    """ look up file is log and copy it to that path. """
-    file = os.path.expanduser(file)
+    """ Copy the backed file to that path. """
+    file = os.path.abspath(file)
+    dest = os.path.expanduser(dest)
     if os.path.exists(file) == False:
-        raise RuntimeError("The file you want to recover does not exist!")
+        print "    %s is disappeared!" % file
+        return
     print "    Start to recover %s " % file
-    os.system("tar -xjp -f %s -C %S" % (file,dest))
+    os.system("tar -xjp -f %s -C %s" % (file,os.path.split(dest)[0]))
     print "    Recovering %s success" % file
     """ TODO need to know if backup and recovering really succeed. Check modify time ."""
 
