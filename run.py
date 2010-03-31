@@ -61,6 +61,8 @@ class EastWind:
             print "  %s" % i["path"]
             i["backuped"] = backup(i["path"])
         self.backup_list.write()
+        """  Remove old backup files. """
+        
 
     def recover(self):
         """ Recover files """
