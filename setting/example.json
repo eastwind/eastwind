@@ -12,7 +12,8 @@
    "Backup":
    [
       {
-         "path": "~/.bashrc"
+	 "name": "emacs"
+	 "path": ["~/.emacs","~/.emacs.d"]
       }
    ]
 }
