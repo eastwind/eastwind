@@ -14,8 +14,8 @@
       {
 	     "name": "bash",
 	     "path": "~/.bashrc"
-	  },
-	  {
+	   },
+	   {
 	     "name": "emacs",
 	     "path": ["~/.emacs","~/.emacs.d"]
       },
