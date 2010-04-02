@@ -40,14 +40,6 @@ class EastWind:
                     self.install_list.append(t["name"])
                 if "ppa" in t:
                     self.ppa_list.append(t["ppa"])
-            # for t in s.info['Backup']:
-            #     if 'path' in t:
-            #         if type(t['path']) == list:
-            #             tmp = t.copy()
-            #             for u in t['path']:
-            #                 tmp.['path'] = u
-            #         else:
-            #             self.backup_list.info['Path'].append(t)
 
     def load_backup_list(self):
         # TODO might need to improve the performence of checking a file is in 
@@ -56,10 +48,14 @@ class EastWind:
         load 'path' from json files, add them to backup list if
         it's not in the list.
         """
+        blist = []
+        for v in self.backup_list.info['Path']:
+            blist.append(v['path'])
+
         for jsons in os.listdir('setting'):
             if re.match("[^.]*.json$",jsons) == None:
                 continue
-            blist = json.dumps(self.backup_list.info['Path'])
+
             s = JsonInfo( 'setting/%s' % jsons )
             for t in s.info['Backup']:
                 if 'path' in t:
@@ -70,18 +66,12 @@ class EastWind:
                                 print "add %s to backup list" % u
                                 v['path']=u
                                 self.backup_list.info['Path'].append(v.copy())
-                                blist = json.dumps(
-                                        self.backup_list.info['Path'])
+                                blist.append(u)
                     else:
                         if t['path'] not in blist:
                             print "add %s to backup list" % t['path']
                             self.backup_list.info['Path'].append(t)
-                            blist = json.dumps(self.backup_list.info['Path'])
-
-    # def clean_backup(self):
-    #     os.system("rm backup/*.tar.bz2")
-    #     os.remove("backup.json")
-    #     self.backup_list = JsonInfo("backup.json")
+                            blist.append(t['path'])
 
     def backup(self):
         """ Backup files """
