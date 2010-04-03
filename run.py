@@ -47,6 +47,8 @@ class EastWind:
         load 'path' from json files, add them to backup list if
         it's not in the list.
         """
+        # blist record the 'path' which are already in backup_list
+        # when we add a path into backup_list, we also add it into blist
         blist = []
         for v in self.backup_list.info['Path']:
             blist.append(v['path'])
@@ -76,17 +78,19 @@ class EastWind:
         """ Backup files """
         print "Start to backup files:"
         b = self.backup_list.info['Path']
+        # Since we might change backup_list in the loop, we iterate on a
+        # copy of b, which denote by b[:]
         for i in b[:]:
             print "  %s" % i["path"]
             tmp = backup(i)
-            #print tmp
             if tmp != None:
                 b[b.index(i)]=tmp.copy()
             else:
-                # tmp == None if the i['path'] is not exist.
+                # tmp == None if i['path'] is not exist, remove it from 
+                # backup list
                 b.remove(i)
         self.backup_list.write()
-        """  Remove old backup files. """
+        """  Replace old backup list. """
 
     def recover(self):
         """ Recover files """
