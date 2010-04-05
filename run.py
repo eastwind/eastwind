@@ -96,7 +96,12 @@ class EastWind:
         """ Recover files """
         for i in self.backup_list.info['Path']:
             if 'backuped' in i:
-                recover(i['backuped'], i['path'])
+                try:
+                    recover(i['backuped'], i['path'])
+                except NotFoundError as e:
+                    print "Can't find file %s" % e
+                except RecoverError as e:
+                    print "Failed to recover %s" % e
 
     def source(self):
         print "Start adding sources:"

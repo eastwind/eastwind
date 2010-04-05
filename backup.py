@@ -6,6 +6,17 @@ import time
 """
 Backup scripts and setting.
 """
+class NotFoundError(Exception):
+    def __init__( self , value ):
+        self.value = value
+    def __str__( self ):
+        return repr( self.value )
+
+class RecoverError(Exception):
+    def __init__( self , value ):
+        self.value = value
+    def __str__( self ):
+        return repr( self.value )
 
 def backup_path(file):
     """ Hash the filename with time variant. """
@@ -54,8 +65,7 @@ def recover(file, dest):
     dest = os.path.expanduser(dest)
 
     if os.path.exists(file) == False:
-        print "    %s is disappeared!" % file
-        return 2
+        raise NotFoundError( file )
     if os.path.exists(dest) == False:
         print "    %s does not exist, make it." %dest
         os.makedirs(os.path.expanduser(dest))
@@ -68,12 +78,10 @@ def recover(file, dest):
     print "    Start to recover %s " % file
     os.system("tar -xjp -f %s -C %s" % (file,os.path.split(dest)[0]))
     #print "    Recovering %s success" % file
-    if checkfile( dest , mtime ) == True:
+    if checkfile( dest , atime ) == True:
        print "    Recovering %s success" % file
-       return 0
     else:
-       print "    Failed to recover %s" % file
-       return 1
+       raise RecoverError( file )
     # TODO need to see if there is a better way to check whether the file
     # is recovered properly. 
 
@@ -82,7 +90,7 @@ def checkfile( fname , ftime ):
     fname : file name
     ftime : the latest access time of the file should be later than this.
     """
-    if os.path.exists(dest) == False:
+    if os.path.exists(fname) == False:
         return False
 
     t = os.stat(fname).st_atime
