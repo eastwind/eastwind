@@ -17,7 +17,7 @@ class JsonInfo:
       self.file = _file
       if self.file != None:
          if os.path.exists(self.file) == False:
-            self.info = {"Path":[]}
+            self.info = {}
             self.write()
          self.read()
 
