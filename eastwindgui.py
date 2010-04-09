@@ -1,38 +1,39 @@
 #!/usr/bin/env python
 import pygtk
 pygtk.require('2.0')
-import gtk, gobject
-tasks =  {
-    "Buy groceries": ["Go to Asda after work","abcd"],
-    "Do some programming": "Remember to update your software",
-    "Power up systems": "Turn on the client but leave the server",
-    "Watch some tv": "Remember to catch ER"
-    } 
-
-tasks3 =  {
-    "Watch some tv": "Remember to catch ER"
-    } 
+import gtk, gobject, os, re
+from infoio import *
 
 class InfoModel:
     """ The model class holds the information we want to display """
-    def __init__(self,list):
+    def __init__(self, mode):
         """ Sets up and populates our gtk.TreeStore """
         self.tree_store = gtk.TreeStore( gobject.TYPE_STRING,
                                          gobject.TYPE_BOOLEAN )
         # places the global people data into the list
         # we form a simple tree.
-        for item in list.keys():
-            parent = self.tree_store.append( None, (item, None) )
-            if type(list[item]) == list:
-                for i in list[item]:
-                    self.tree_store.append(parent, (i, None))
-            else:
-                self.tree_store.append( parent, (list[item],None) )
+        if mode == "recover":
+            s = JsonInfo('backup.json')
+            for t in s.info['Path']:
+                self.tree_store.append(None, (t['path'], None))
+        else:
+            for jsons in os.listdir('setting'):
+                if re.match("[^.]*.json$", jsons) == None:
+                    continue
+                s = JsonInfo('setting/%s' % jsons)
+                parent = self.tree_store.append(None, (jsons, None))
+                if mode == "install":
+                    for t in s.info['Apps']:
+                        self.tree_store.append(parent, (t['name'], None))
+                elif mode == "backup":
+                    for t in s.info['Backup']:
+                        self.tree_store.append(parent, (t['name'], None))
         return
+
     def get_model(self):
         """ Returns the model """
         if self.tree_store:
-            return self.tree_store 
+            return self.tree_store
         else:
             return None
 
@@ -52,12 +53,12 @@ class DisplayModel:
         self.renderer1 = gtk.CellRendererToggle()
         self.renderer1.set_property('activatable', True)
         self.renderer1.connect( 'toggled', self.col1_toggled_cb, model )
-		
+
         # Connect column0 of the display with column 0 in our list model
         # The renderer will then display whatever is in column 0 of
         # our model .
         self.column0 = gtk.TreeViewColumn("Name", self.renderer, text=0)
-		
+
         # The columns active state is attached to the second column
         # in the model.  So when the model says True then the button
         # will show as active e.g on.
@@ -66,6 +67,7 @@ class DisplayModel:
         self.view.append_column( self.column0 )
         self.view.append_column( self.column1 )
         return self.view
+
     def col0_edited_cb( self, cell, path, new_text, model ):
         """
         Called when a text cell is edited.  It puts the new text
@@ -91,7 +93,7 @@ class DisplayModel:
         #print "Toggle '%s' to: %s" % (model[path][0], model[path][1],)
         return
 
-class EastWind:
+class EastWindGui:
     def delete_event(self, widget, event, data=None):
         print "delete event occurred"
         return False
@@ -99,7 +101,7 @@ class EastWind:
     def destroy(self, widget, data=None):
         print "destroy signal occurred"
         gtk.main_quit()
-        
+
         ''' functions for making widget'''
 
     def make_button(self,table):
@@ -115,7 +117,7 @@ class EastWind:
         table.attach(button, 13, 14, 14, 15,gtk.FILL,
             gtk.SHRINK, 1, 1)
         button.show()
-        
+
         #tabs
     def make_notebook(self,table):
         notebook = gtk.Notebook()
@@ -139,10 +141,11 @@ class EastWind:
             frame.set_border_width(10)
             frame.set_size_request(100, 75)
             frame.show()
-            
+
             '''label on notbook tab'''
             label = gtk.Label(i)
             notebook.append_page(frame, label)
+
     def make_explanation(self,table):
         wins = gtk.TextView()
         wins.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(5140, 5140, 5140))
@@ -150,6 +153,7 @@ class EastWind:
         table.attach(wins, 13, 15, 0, 14,
             gtk.FILL | gtk.EXPAND,gtk.FILL | gtk.EXPAND, 1, 1)
         wins.show()
+
     def __init__(self):
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title("EastWind")
@@ -172,14 +176,15 @@ class EastWind:
         gtk.main()
 
 if __name__ == "__main__": # if this file is included then no gui.
-    Store = InfoModel(tasks)
-    Store2 = InfoModel(tasks2)
-    Store3 = InfoModel(tasks3)
+    Store = InfoModel('install')
+    Store2 = InfoModel('backup')
+    Store3 = InfoModel('recover')
     Store_list = {
-        "Install":Store,
-        "Backup":Store2,
-        "Recover":Store3
+        "Install": Store,
+        "Backup":  Store2,
+        "Recover": Store3
         }
     Display = DisplayModel()
-    hello = EastWind()
-    hello.main()
+    e = EastWindGui()
+    e.main()
+
