@@ -144,8 +144,14 @@ class EastWindGui:
 
             '''label on notbook tab'''
             label = gtk.Label(i)
-            notebook.append_page(frame, label)
-
+            notebook.append_page(self.view, label)
+            notebook.show()
+            self.view.show()
+            '''
+            The explanation area on the right of the window.
+            TODO: should use something other than textview.
+            '''
+            
     def make_explanation(self,table):
         wins = gtk.TextView()
         wins.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(5140, 5140, 5140))
