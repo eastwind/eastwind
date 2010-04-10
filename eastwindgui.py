@@ -45,15 +45,17 @@ class DisplayModel:
         # setup the text cell renderer and allows these
         # cells to be edited.
         self.renderer = gtk.CellRendererText()
-        self.renderer.set_property( 'editable', True )
-        self.renderer.connect( 'edited', self.col0_edited_cb, model )
+        self.renderer.set_property( 'editable', False )
+        #self.renderer.connect( 'edited', self.col0_edited_cb, model )
 
         # The toggle cellrenderer is setup and we allow it to be
         # changed (toggled) by the user.
         self.renderer1 = gtk.CellRendererToggle()
         self.renderer1.set_property('activatable', True)
         self.renderer1.connect( 'toggled', self.col1_toggled_cb, model )
-
+        # a column for some information about the option.
+        self.renderer2 = gtk.CellRendererText()
+        self.renderer2.set_property( 'editable', False)
         # Connect column0 of the display with column 0 in our list model
         # The renderer will then display whatever is in column 0 of
         # our model .
@@ -64,18 +66,23 @@ class DisplayModel:
         # will show as active e.g on.
         self.column1 = gtk.TreeViewColumn("Select", self.renderer1 )
         self.column1.add_attribute( self.renderer1, "active", 1)
+
+        self.column2 = gtk.TreeViewColumn("Information", self.renderer2)
+
+        
         self.view.append_column( self.column0 )
+        self.view.append_column( self.column2 )
         self.view.append_column( self.column1 )
         return self.view
 
-    def col0_edited_cb( self, cell, path, new_text, model ):
+    #def col0_edited_cb( self, cell, path, new_text, model ):
         """
         Called when a text cell is edited.  It puts the new text
         in the model so that it is displayed properly.
         """
         #print "Change '%s' to '%s'" % (model[path][0], new_text)
-        model[path][0] = new_text
-        return
+     #   model[path][0] = new_text
+     #   return
     def col1_toggled_cb( self, cell, path, model ):
         """
         Sets the toggled state on the toggle button to true or false.
@@ -84,7 +91,7 @@ class DisplayModel:
         '''toggle children too '''
         iter = model.get_iter(path)
         for i in range(model.iter_n_children(iter)):
-            model.set_value(model.iter_nth_child(iter,i), 1, not model.get_value(model.iter_nth_child(iter,i), 1))
+            model.set_value(model.iter_nth_child(iter,i), 1,model[path][1])
         #print "Toggle '%s' to: %s" % (model[path][0], model[path][1],)
         return
 
@@ -147,7 +154,6 @@ class EastWindGui:
             The explanation area on the right of the window.
             TODO: should use something other than textview.
             '''
-
     def make_explanation(self,table):
         wins = gtk.TextView()
         wins.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(5140, 5140, 5140))
