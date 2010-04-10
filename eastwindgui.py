@@ -82,14 +82,9 @@ class DisplayModel:
         """
         model[path][1] = not model[path][1]
         '''toggle children too '''
-        print type(cell)
-        print type(path)
-        print type(model)
-        print model.iter_children(model.get_iter(path))
-        #print model.iter_is_valid("0:0")
-        print path
-        #for i in model[path]:
-        #    print i
+        iter = model.get_iter(path)
+        for i in range(model.iter_n_children(iter)):
+            model.set_value(model.iter_nth_child(iter,i), 1, not model.get_value(model.iter_nth_child(iter,i), 1))
         #print "Toggle '%s' to: %s" % (model[path][0], model[path][1],)
         return
 
@@ -129,11 +124,12 @@ class EastWindGui:
         self.show_tabs = True
         self.show_border = True
 
-        table_list = ["Install", "Backup", "Recover"]
-        for i in table_list:
+        store_list = ["install", "backup", "recover"]
+
+        for i in store_list:
             #CellRendererText
             # Get the model and attach it to the view
-            self.mdl = Store_list[i].get_model()
+            self.mdl = InfoModel(i).get_model()
             self.view = Display.make_view( self.mdl )
             # Add our view into the main window
 
@@ -143,7 +139,7 @@ class EastWindGui:
             frame.show()
 
             '''label on notbook tab'''
-            label = gtk.Label(i)
+            label = gtk.Label(i.title())
             notebook.append_page(self.view, label)
             notebook.show()
             self.view.show()
@@ -151,7 +147,7 @@ class EastWindGui:
             The explanation area on the right of the window.
             TODO: should use something other than textview.
             '''
-            
+
     def make_explanation(self,table):
         wins = gtk.TextView()
         wins.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(5140, 5140, 5140))
@@ -182,14 +178,6 @@ class EastWindGui:
         gtk.main()
 
 if __name__ == "__main__": # if this file is included then no gui.
-    Store = InfoModel('install')
-    Store2 = InfoModel('backup')
-    Store3 = InfoModel('recover')
-    Store_list = {
-        "Install": Store,
-        "Backup":  Store2,
-        "Recover": Store3
-        }
     Display = DisplayModel()
     e = EastWindGui()
     e.main()
