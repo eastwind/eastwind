@@ -37,18 +37,26 @@ class EastWind:
 
     def to_install(self, pkg):
         #TODO: check if the pkg is installed correctly before adding it into json
-        conf = self.data.new_parser("setting/%s.conf" % strftime("%Y-%m-%d-%H-%M-%S"))
-        conf.add_section("Install")
-        conf.set("Install", "install", pkg)
+        if os.path.exists("setting/auto.conf"):
+            conf = self.data.read("setting/auto.conf")
+        else:
+            conf = self.data.new_parser("setting/auto.conf")
+        section = strftime("%Y-%m-%d-%H-%M-%S")
+        conf.add_section(section)
+        conf.set(section, "install", pkg)
         self.data.info["install"] = pkg
         self.install()
         self.data.write()
 
     def to_ppa(self, pkg_src):
         #TODO: check if the ppa is correctly added
-        conf = self.data.new_parser("setting/%s.conf" % strftime("%Y-%m-%d-%H-%M-%S"))
-        conf.add_section("Ppa")
-        conf.set("Ppa", "ppa", pkg_src)
+        if os.path.exists("setting/auto.conf"):
+            conf = self.data.read("setting/auto.conf")
+        else:
+            conf = self.data.new_parser("setting/auto.conf")
+        section = strftime("%Y-%m-%d-%H-%M-%S")
+        conf.add_section(section)
+        conf.set(section, "ppa", pkg_src)
         self.data.info["ppa"] = pkg_src
         self.source()
         self.data.write()

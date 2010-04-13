@@ -21,6 +21,7 @@ class Info:
                     self.info[j[0]] = [j[1]]
         print "    Loaded %s" % file
         self.parsers[file] = config
+        return config
 
     def read_files(self, prefix, dir_list):
         for f in dir_list:
