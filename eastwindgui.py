@@ -2,32 +2,38 @@
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject, os, re
-from infoio import *
+from info import *
+from eastwind import *
 
 class InfoModel:
     """ The model class holds the information we want to display """
+
+    info = None
+
     def __init__(self, mode):
         """ Sets up and populates our gtk.TreeStore """
         self.tree_store = gtk.TreeStore( gobject.TYPE_STRING,
                                          gobject.TYPE_BOOLEAN )
         # places the global people data into the list
         # we form a simple tree.
+        self.info = EastWind()
         if mode == "recover":
-            s = JsonInfo('backup.json')
-            for t in s.info['Path']:
-                self.tree_store.append(None, (t['path'], None))
+            dirs = self.info.load_recover()
+            for d in dirs:
+                conf = Info()
+                conf.read("backup/%s/backup.conf" % d)
+                parent = self.tree_store.append(None, (d, None))
+                for s,t in conf.info.items():
+                    self.tree_store.append(parent, (s, None))
         else:
-            for jsons in os.listdir('setting'):
-                if re.match("[^.]*.json$", jsons) == None:
-                    continue
-                s = JsonInfo('setting/%s' % jsons)
-                parent = self.tree_store.append(None, (jsons, None))
-                if mode == "install":
-                    for t in s.info['Apps']:
-                        self.tree_store.append(parent, (t['name'], None))
-                elif mode == "backup":
-                    for t in s.info['Backup']:
-                        self.tree_store.append(parent, (t['name'], None))
+            self.info.load()
+            for n,p in self.info.data.parsers.items():
+                parent = self.tree_store.append(None, (n, None))
+                for s in p.sections():
+                    subparent = self.tree_store.append(parent, (s, None))
+                    for i in p.items(s):
+                        if i[0] == mode:
+                            self.tree_store.append(subparent, (i[1], None))
         return
 
     def get_model(self):
@@ -69,7 +75,7 @@ class DisplayModel:
 
         self.column2 = gtk.TreeViewColumn("Information", self.renderer2)
 
-        
+
         self.view.append_column( self.column0 )
         self.view.append_column( self.column2 )
         self.view.append_column( self.column1 )

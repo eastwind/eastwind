@@ -4,16 +4,14 @@ Main script for setting recovering
 """
 
 from backup import *
-from infoio import *
+from info import *
 from time import *
 import os
 import re
 import sys
 
 class EastWind:
-    ppa_list = []
-    install_list = []
-    backup_list = JsonInfo('backup.json')
+    data = Info()
 
     def cli(self):
         if len(sys.argv) == 1:
@@ -27,115 +25,108 @@ class EastWind:
         elif sys.argv[1] == "ppa":
             self.to_ppa(sys.argv[2])
         elif sys.argv[1] == "backup":
-            self.load_backup_list()
+            self.load()
             self.backup()
+        elif sys.argv[1] == "recover":
+            if len(sys.argv) == 3:
+                self.recover(argv[2])
+            else:
+                self.recover()
         else:
             print "The argument is not correct!"
 
     def to_install(self, pkg):
-        install_list.append(pkg)
-        self.install()
         #TODO: check if the pkg is installed correctly before adding it into json
-        s = JsonInfo("%s.json" % strftime("%Y-%m-%d"))
-        s.info['Apps'].append({"name": pkg})
-        s.write()
+        conf = self.data.new_parser("setting/%s.conf" % strftime("%Y-%m-%d-%H-%M-%S"))
+        conf.add_section("Install")
+        conf.set("Install", "install", pkg)
+        self.data.info["install"] = pkg
+        self.install()
+        self.data.write()
 
     def to_ppa(self, pkg_src):
-        ppa_list.append(pkg)
-        self.source()
         #TODO: check if the ppa is correctly added
-        s = JsonInfo("%s.json" % strftime("%Y-%m-%d"))
-        s.info['Apps'].append({"ppa": pkg_src})
-        s.write()
+        conf = self.data.new_parser("setting/%s.conf" % strftime("%Y-%m-%d-%H-%M-%S"))
+        conf.add_section("Ppa")
+        conf.set("Ppa", "ppa", pkg_src)
+        self.data.info["ppa"] = pkg_src
+        self.source()
+        self.data.write()
 
     def load(self):
         """ Loads all the settings from ./setting """
         print "Start loading settings:"
-        for jsons in os.listdir('setting'):
-            if re.match("[^.]*.json$", jsons) == None:
-                continue
-            s = JsonInfo('setting/%s' % jsons)
-            print "    Loading %s" % jsons
-            for t in s.info['Apps']:
-                if "name" in t:
-                    self.install_list.append(t["name"])
-                if "ppa" in t:
-                    self.ppa_list.append(t["ppa"])
+        self.data.read_files('setting/', os.listdir('setting'))
 
-    def load_backup_list(self):
-        # TODO The performence of checking blist might not be good enough.
-        """
-        load 'path' from json files, add them to backup list if
-        it's not in the list.
-        """
-        # blist record the 'path' which are already in backup_list
-        # when we add a path into backup_list, we also add it into blist
-        blist = []
-        for v in self.backup_list.info['Path']:
-            blist.append(v['path'])
-
-        for jsons in os.listdir('setting'):
-            if re.match("[^.]*.json$",jsons) == None:
-                continue
-
-            s = JsonInfo( 'setting/%s' % jsons )
-            for t in s.info['Backup']:
-                if 'path' in t:
-                    if type(t['path']) == list:
-                        v = t.copy()
-                        for u in t['path']:
-                            if u not in blist:
-                                print "add %s to backup list" % u
-                                v['path']=u
-                                self.backup_list.info['Path'].append(v.copy())
-                                blist.append(u)
-                    else:
-                        if t['path'] not in blist:
-                            print "add %s to backup list" % t['path']
-                            self.backup_list.info['Path'].append(t)
-                            blist.append(t['path'])
+    def load_recover(self):
+        """ Load folders for recovery """
+        print "    Find the folders for recovery"
+        dirs = os.listdir('backup')
+        for d in dirs:
+            if re.match("^\.", d) != None:
+                dirs.remove(d)
+        return dirs
 
     def backup(self):
         """ Backup files """
         print "Start to backup files:"
-        b = self.backup_list.info['Path']
-        # Since we might change backup_list in the loop, we iterate on a
-        # copy of b, which denote by b[:]
-        for i in b[:]:
-            print "  %s" % i["path"]
-            tmp = backup(i)
-            if tmp != None:
-                b[b.index(i)]=tmp.copy()
-            else:
-                # tmp == None if i['path'] is not exist, remove it from
-                # backup list
-                b.remove(i)
-        self.backup_list.write()
-        """  Replace old backup list. """
+        folder = strftime("%Y-%m-%d-%H-%M-%S")
+        backupconf = Info()
+        os.makedirs(os.path.abspath("backup/%s" % folder))
+        conf = backupconf.new_parser("backup/%s/backup.conf" % folder)
+        conf.add_section('Backuped')
+        if 'backup' in self.data.info:
+            for b in self.data.info['backup']:
+                for j in b.split(' '):
+                    try:
+                        path = backup(j, folder)
+                        conf.set('Backuped', j, path)
+                    except NotFoundError as e:
+                        print "    Error: Can't find file %s" % e
+            backupconf.write()
 
-    def recover(self):
+    def recover(self, version = None):
         """ Recover files """
-        for i in self.backup_list.info['Path']:
-            if 'backuped' in i:
-                try:
-                    recover(i['backuped'], i['path'])
-                except NotFoundError as e:
-                    print "Can't find file %s" % e
-                except RecoverError as e:
-                    print "Failed to recover %s" % e
+        if version == None:
+            dirs = self.load_recover()
+            if len(dirs) == 0:
+                return
+            version = max(dirs)
+        path = "backup/%s/backup.conf" % version
+        if not os.path.exists(path):
+            print "    Error: Config file %s not exist!" % path
+            return
+        recoverconf = Info()
+        recoverconf.read(path)
+        print "Recovering files:"
+        for i,j in recoverconf.info.items():
+            try:
+                recover(j[0], i)
+            except NotFoundError as e:
+                print "    Error: Can't find file %s" % e
 
     def source(self):
-        print "Start adding sources:"
-        for i in self.ppa_list:
-            os.system("add-apt-repository %s" % i)
+        if 'ppa' in self.data.info:
+            print "Start adding sources:"
+            for i in self.data.info['ppa']:
+                os.system("add-apt-repository %s" % i)
 
     def update(self):
         print "Updating:"
         os.system("apt-get update")
 
     def install(self):
-        print "Installing:"
-        os.system("apt-get install --yes %s" % " ".join(self.install_list))
+        if 'pre-install' in self.data.info:
+            print "Executing pre-install commands:"
+            for s in self.data.info['pre-install']:
+                os.system(s)
+        if 'install' in self.data.info:
+            print "Installing:"
+            os.system("apt-get install --yes %s" % " ".join(self.data.info['install']))
+        if 'post-install' in self.data.info:
+            print "Executing post-install commands:"
+            for s in self.data.info['post-install']:
+                os.system(s)
 
 if __name__ == "__main__":
     e = EastWind()
