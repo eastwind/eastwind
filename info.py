@@ -7,8 +7,9 @@ This library deals with I/O of information between files and program.
 import ConfigParser, re
 
 class Info:
-    parsers = {}
-    info = {}
+    def __init__(self):
+        self.parsers = {}
+        self.info = {}
 
     def read(self, file):
         config = ConfigParser.ConfigParser()
