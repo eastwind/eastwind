@@ -131,7 +131,9 @@ class EastWindGui:
         notebook = gtk.Notebook()
         notebook.set_tab_pos(gtk.POS_TOP)
         notebook.set_size_request(400,400)
-        table.attach(notebook, 0,13,0,14)
+       
+        table.attach(notebook, 0,15,0,14)
+       
         notebook.show()
         table.show()
         self.show_tabs = True
@@ -151,9 +153,32 @@ class EastWindGui:
             frame.set_size_request(100, 75)
             frame.show()
 
+            vbox = gtk.VBox(False ,5)
+            hbox = gtk.HBox(True ,3)
+            valign = gtk.Alignment(0,1,0,0)
+            vbox.pack_start(valign)
+            vbox.pack_start(self.view)
+            halign = gtk.Alignment(1,0,0,0)
+            halign.add(hbox)
+            vbox.pack_start(halign,False,False,3)
+            
+            add = gtk.Button("add")
+            delete = gtk.Button("delete")
+#            vbox.pack_start(hbox)
+            hbox.pack_start(add)
+            hbox.pack_start(delete)
+            add.show()
+            delete.show()
+            hbox.show()
+            vbox.show()
+            halign.show()
+            #table.attach(notebook, 0,13,0,14)
+#            table.attach(vbox, 0,15,0,13)
+
             '''label on notbook tab'''
             label = gtk.Label(i.title())
-            notebook.append_page(self.view, label)
+            
+            notebook.append_page(vbox, label)
             notebook.show()
             self.view.show()
             '''
@@ -181,7 +206,7 @@ class EastWindGui:
 
         self.make_notebook(table)
         self.make_button(table)
-        self.make_explanation(table)
+        #self.make_explanation(table)
 
         self.window.show()
         self.show_tabs=True
