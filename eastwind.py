@@ -37,10 +37,7 @@ class EastWind:
 
     def to_install(self, pkg):
         #TODO: check if the pkg is installed correctly before adding it into json
-        if os.path.exists("setting/auto.conf"):
-            conf = self.data.read("setting/auto.conf")
-        else:
-            conf = self.data.new_parser("setting/auto.conf")
+        conf = self.load_auto()
         section = strftime("%Y-%m-%d-%H-%M-%S")
         conf.add_section(section)
         conf.set(section, "install", pkg)
@@ -50,10 +47,7 @@ class EastWind:
 
     def to_ppa(self, pkg_src):
         #TODO: check if the ppa is correctly added
-        if os.path.exists("setting/auto.conf"):
-            conf = self.data.read("setting/auto.conf")
-        else:
-            conf = self.data.new_parser("setting/auto.conf")
+        conf = self.load_auto()
         section = strftime("%Y-%m-%d-%H-%M-%S")
         conf.add_section(section)
         conf.set(section, "ppa", pkg_src)
@@ -74,6 +68,13 @@ class EastWind:
             if re.match("^\.", d) != None:
                 dirs.remove(d)
         return dirs
+
+    def load_auto(self):
+        if os.path.exists("setting/auto.conf"):
+            conf = self.data.read("setting/auto.conf")
+        else:
+            conf = self.data.new_parser("setting/auto.conf")
+        return conf
 
     def backup(self):
         """ Backup files """
