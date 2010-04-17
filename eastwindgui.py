@@ -33,7 +33,8 @@ class InfoModel:
                     subparent = self.tree_store.append(parent, (s, None))
                     for i in p.items(s):
                         if i[0] == mode:
-                            self.tree_store.append(subparent, (i[1], None))
+                            for t in i[1].split(' '):
+                                self.tree_store.append(subparent, (t, None))
         return
 
     def get_model(self):
@@ -96,10 +97,16 @@ class DisplayModel:
         model[path][1] = not model[path][1]
         '''toggle children too '''
         iter = model.get_iter(path)
-        for i in range(model.iter_n_children(iter)):
-            model.set_value(model.iter_nth_child(iter,i), 1,model[path][1])
+        self.toggle_cb_recursive(model, iter, model[path][1])
+        #for i in range(model.iter_n_children(iter)):
+        #    model.set_value(model.iter_nth_child(iter,i), 1,model[path][1])
         #print "Toggle '%s' to: %s" % (model[path][0], model[path][1],)
         return
+    def toggle_cb_recursive(self, model, iter, value):
+        model.set_value(iter, 1, value)
+        if model.iter_n_children(iter) != 0:
+            for i in range(model.iter_n_children(iter)):
+                self.toggle_cb_recursive(model, model.iter_nth_child(iter, i), value)
 
 class EastWindGui:
     def delete_event(self, widget, event, data=None):
