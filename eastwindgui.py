@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+"""
+    EastWindGui
+"""
+
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject, os, re
@@ -8,14 +12,9 @@ from eastwind import *
 class InfoModel:
     """ The model class holds the information we want to display """
 
-    info = None
-
     def __init__(self, mode):
         """ Sets up and populates our gtk.TreeStore """
-        self.tree_store = gtk.TreeStore( gobject.TYPE_STRING,
-                                         gobject.TYPE_BOOLEAN )
-        # places the global people data into the list
-        # we form a simple tree.
+        self.tree_store = gtk.TreeStore( gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
         self.info = EastWind()
         if mode == "recover":
             dirs = self.info.load_recover()
@@ -59,7 +58,7 @@ class DisplayModel:
         # changed (toggled) by the user.
         self.renderer1 = gtk.CellRendererToggle()
         self.renderer1.set_property('activatable', True)
-        self.renderer1.connect( 'toggled', self.col1_toggled_cb, model )
+        self.renderer1.connect( 'toggled', self.toggled, model )
         # a column for some information about the option.
         self.renderer2 = gtk.CellRendererText()
         self.renderer2.set_property( 'editable', False)
@@ -82,59 +81,30 @@ class DisplayModel:
         self.view.append_column( self.column1 )
         return self.view
 
-    #def col0_edited_cb( self, cell, path, new_text, model ):
+    def edited( self, cell, path, new_text, model ):
         """
         Called when a text cell is edited.  It puts the new text
         in the model so that it is displayed properly.
         """
-        #print "Change '%s' to '%s'" % (model[path][0], new_text)
-     #   model[path][0] = new_text
-     #   return
-    def col1_toggled_cb( self, cell, path, model ):
-        """
-        Sets the toggled state on the toggle button to true or false.
-        """
-        model[path][1] = not model[path][1]
-        '''toggle children too '''
-        iter = model.get_iter(path)
-        self.toggle_cb_recursive(model, iter, model[path][1])
-        #for i in range(model.iter_n_children(iter)):
-        #    model.set_value(model.iter_nth_child(iter,i), 1,model[path][1])
-        #print "Toggle '%s' to: %s" % (model[path][0], model[path][1],)
+        model[path][0] = new_text
         return
-    def toggle_cb_recursive(self, model, iter, value):
+
+    def toggled( self, cell, path, model ):
+        """ Sets the toggled state on the toggle button to true or false. """
+        model[path][1] = not model[path][1]
+        # toggle children too
+        iter = model.get_iter(path)
+        self.toggle_recursive(model, iter, model[path][1])
+        return
+
+    def toggle_recursive(self, model, iter, value):
         model.set_value(iter, 1, value)
         if model.iter_n_children(iter) != 0:
             for i in range(model.iter_n_children(iter)):
                 self.toggle_cb_recursive(model, model.iter_nth_child(iter, i), value)
 
-class EastWindGui:
-    def delete_event(self, widget, event, data=None):
-        print "delete event occurred"
-        return False
-
-    def destroy(self, widget, data=None):
-        print "destroy signal occurred"
-        gtk.main_quit()
-
-        ''' functions for making widget'''
-
-    def make_button(self,table):
-        button = gtk.Button(stock=gtk.STOCK_QUIT)
-        button.connect("clicked", lambda w: gtk.main_quit())
-        button.set_size_request(70,35)
-        table.attach(button, 14, 15, 14, 15,gtk.FILL,
-            gtk.SHRINK, 1, 1)
-        button.show()
-        ''' make GO button'''
-        button = gtk.Button("GO!")
-        button.set_size_request(70,35)
-        table.attach(button, 13, 14, 14, 15,gtk.FILL,
-            gtk.SHRINK, 1, 1)
-        button.show()
-
-        #tabs
-    def make_notebook(self,table):
+class NotebookModel:
+    def __init__(self, table):
         notebook = gtk.Notebook()
         notebook.set_tab_pos(gtk.POS_TOP)
         notebook.set_size_request(400,400)
@@ -171,7 +141,6 @@ class EastWindGui:
 
             add = gtk.Button("Add")
             delete = gtk.Button("Delete")
-#            vbox.pack_start(hbox)
             hbox.pack_start(add)
             hbox.pack_start(delete)
             add.show()
@@ -179,8 +148,6 @@ class EastWindGui:
             hbox.show()
             vbox.show()
             halign.show()
-            #table.attach(notebook, 0,13,0,14)
-#            table.attach(vbox, 0,15,0,13)
 
             '''label on notbook tab'''
             label = gtk.Label(i.title())
@@ -188,17 +155,29 @@ class EastWindGui:
             notebook.append_page(vbox, label)
             notebook.show()
             self.view.show()
-            '''
-            The explanation area on the right of the window.
-            TODO: should use something other than textview.
-            '''
-    def make_explanation(self,table):
-        wins = gtk.TextView()
-        wins.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(5140, 5140, 5140))
-        wins.set_cursor_visible(False)
-        table.attach(wins, 13, 15, 0, 14,
-            gtk.FILL | gtk.EXPAND,gtk.FILL | gtk.EXPAND, 1, 1)
-        wins.show()
+
+class EastWindGui:
+    def delete_event(self, widget, event, data=None):
+        print "delete event occurred"
+        return False
+
+    def destroy(self, widget, data=None):
+        print "destroy signal occurred"
+        gtk.main_quit()
+
+    def make_button(self,table):
+        button = gtk.Button(stock=gtk.STOCK_QUIT)
+        button.connect("clicked", lambda w: gtk.main_quit())
+        button.set_size_request(70,35)
+        table.attach(button, 14, 15, 14, 15,gtk.FILL,
+            gtk.SHRINK, 1, 1)
+        button.show()
+        ''' make GO button'''
+        button = gtk.Button("GO!")
+        button.set_size_request(70,35)
+        table.attach(button, 13, 14, 14, 15,gtk.FILL,
+            gtk.SHRINK, 1, 1)
+        button.show()
 
     def __init__(self):
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -211,7 +190,7 @@ class EastWindGui:
         table.set_col_spacings(3)
         self.window.add(table)
 
-        self.make_notebook(table)
+        self.notebook = NotebookModel(table)
         self.make_button(table)
         #self.make_explanation(table)
 
