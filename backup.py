@@ -2,6 +2,7 @@ import os
 import shutil
 import hashlib
 import time
+from info import log
 
 """
 Backup scripts and setting.
@@ -22,7 +23,7 @@ def backup(file, version):
     path = os.path.expanduser(file)
     if os.path.exists(path) == False:
         raise NotFoundError(path)
-    print "    Start to tar %s" % path
+    log.log("    Start to tar %s" % path)
     # Tar the target into a single file
     filename = backup_path(path, version)
     os.system("cd %s && tar -jpc -f %s ./%s" % (
@@ -30,7 +31,7 @@ def backup(file, version):
        os.path.abspath(filename),\
        os.path.split(os.path.abspath(path))[1] )
     )
-    print "    Backup %s success" % path
+    log.log("    Backup %s success" % path)
     return filename
 
 def recover(file, dest):
@@ -41,13 +42,13 @@ def recover(file, dest):
     if os.path.exists(file) == False:
         raise NotFoundError(file)
     if os.path.exists(dest) == False:
-        print "    %s does not exist, make it." %dest
+        log.log("    %s does not exist, make it." % dest)
         os.makedirs(os.path.expanduser(dest))
 
-    print "    Start to recover %s " % file
+    log.log("    Start to recover %s " % file)
     os.system("tar -xjp -f %s -C %s" % (file, os.path.split(dest)[0]))
 
     #TODO: need to see if there is a better way to check whether the file
     # is recovered properly.
-    print "    Recovering %s success" % file
+    log.log("    Recovering %s success" % file)
 

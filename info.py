@@ -6,6 +6,14 @@ This library deals with I/O of information between files and program.
 
 import ConfigParser, re
 
+class Prompt:
+    def error(self, s):
+        print "\033[1;31m%s\033[0m" % s
+    def section(self, s):
+        print "\033[1;33m%s\033[0m" % s
+    def log(self, s):
+        print "%s" % s
+
 class Info:
     def __init__(self):
         self.parsers = {}
@@ -39,4 +47,6 @@ class Info:
         for f,p in self.parsers.items():
             with open(f, 'wb') as configfile:
                 p.write(configfile)
+
+log = Prompt()
 

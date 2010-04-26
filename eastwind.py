@@ -33,7 +33,7 @@ class EastWind:
             else:
                 self.recover()
         else:
-            print "The argument is not correct!"
+            log.error("Error: The argument is not correct!")
 
     def to_install(self, pkg):
         #TODO: check if the pkg is installed correctly before adding it into json
@@ -57,12 +57,12 @@ class EastWind:
 
     def load(self):
         """ Loads all the settings from ./setting """
-        print "Start loading settings:"
+        log.section("Start loading settings:")
         self.data.read_files('setting/', os.listdir('setting'))
 
     def load_recover(self):
         """ Load folders for recovery """
-        print "    Find the folders for recovery"
+        log.log("    Find the folders for recovery")
         dirs = os.listdir('backup')
         for d in dirs:
             if re.match("^\.", d) != None:
@@ -78,7 +78,7 @@ class EastWind:
 
     def backup(self):
         """ Backup files """
-        print "Start to backup files:"
+        log.section("Start to backup files:")
         folder = strftime("%Y-%m-%d-%H-%M-%S")
         backupconf = Info()
         os.makedirs(os.path.abspath("backup/%s" % folder))
@@ -103,37 +103,37 @@ class EastWind:
             version = max(dirs)
         path = "backup/%s/backup.conf" % version
         if not os.path.exists(path):
-            print "    Error: Config file %s not exist!" % path
+            log.error("    Error: Config file %s not exist!" % path)
             return
         recoverconf = Info()
         recoverconf.read(path)
-        print "Recovering files:"
+        log.section("Recovering files:")
         for i,j in recoverconf.info.items():
             try:
                 recover(j[0], i)
             except NotFoundError as e:
-                print "    Error: Can't find file %s" % e
+                log.error("    Error: Can't find file %s" % e)
 
     def source(self):
         if 'ppa' in self.data.info:
-            print "Start adding sources:"
+            log.section("Start adding sources:")
             for i in self.data.info['ppa']:
                 os.system("add-apt-repository %s" % i)
 
     def update(self):
-        print "Updating:"
+        log.section("Updating:")
         os.system("apt-get update")
 
     def install(self):
         if 'pre-install' in self.data.info:
-            print "Executing pre-install commands:"
+            log.section("Executing pre-install commands:")
             for s in self.data.info['pre-install']:
                 os.system(s)
         if 'install' in self.data.info:
-            print "Installing:"
+            log.section("Installing:")
             os.system("apt-get install --yes %s" % " ".join(self.data.info['install']))
         if 'post-install' in self.data.info:
-            print "Executing post-install commands:"
+            log.section("Executing post-install commands:")
             for s in self.data.info['post-install']:
                 os.system(s)
 
