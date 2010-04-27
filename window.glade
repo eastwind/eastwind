@@ -2,10 +2,36 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
+  <object class="GtkTreeStore" id="install-treestore">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+      <!-- column-name Select -->
+      <column type="gboolean"/>
+    </columns>
+  </object>
+  <object class="GtkTreeStore" id="backup-treestore">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+      <!-- column-name Select -->
+      <column type="gboolean"/>
+    </columns>
+  </object>
+  <object class="GtkTreeStore" id="recover-treestore">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+      <!-- column-name Select -->
+      <column type="gboolean"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="EastWind">
+    <property name="width_request">400</property>
+    <property name="height_request">400</property>
     <property name="border_width">10</property>
     <signal name="destroy_event" handler="window-destroy"/>
-    <signal name="delete_event" handler="window-delete"/>
+    <signal name="delete_event" handler="window-destroy"/>
     <child>
       <object class="GtkVBox" id="layout-vbox">
         <property name="visible">True</property>
@@ -17,36 +43,44 @@
               <object class="GtkVBox" id="install-vbox">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkTreeView" id="install-tree">
+                  <object class="GtkScrolledWindow" id="install-scroll">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="model">install-treestore</property>
-                    <property name="enable_tree_lines">True</property>
+                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="vscrollbar_policy">automatic</property>
                     <child>
-                      <object class="GtkTreeViewColumn" id="install-name">
-                        <property name="min_width">4</property>
-                        <property name="title">Name</property>
+                      <object class="GtkTreeView" id="install-tree">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="model">install-treestore</property>
+                        <property name="headers_clickable">False</property>
+                        <property name="search_column">0</property>
+                        <property name="enable_tree_lines">True</property>
                         <child>
-                          <object class="GtkCellRendererAccel" id="install-cell-name">
-                            <property name="editable">True</property>
+                          <object class="GtkTreeViewColumn" id="install-name">
+                            <property name="min_width">4</property>
+                            <property name="title">Name</property>
+                            <child>
+                              <object class="GtkCellRendererAccel" id="install-cell-name">
+                                <property name="editable">True</property>
+                              </object>
+                              <attributes>
+                                <attribute name="alignment">1</attribute>
+                                <attribute name="text">0</attribute>
+                              </attributes>
+                            </child>
                           </object>
-                          <attributes>
-                            <attribute name="alignment">1</attribute>
-                            <attribute name="text">0</attribute>
-                          </attributes>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="install-select">
-                        <property name="title">Select</property>
                         <child>
-                          <object class="GtkCellRendererToggle" id="install-cell-toggle">
-                            <signal name="toggled" handler="cell-toggled"/>
+                          <object class="GtkTreeViewColumn" id="install-select">
+                            <property name="title">Select</property>
+                            <child>
+                              <object class="GtkCellRendererToggle" id="install-cell-toggle"/>
+                              <attributes>
+                                <attribute name="active">1</attribute>
+                              </attributes>
+                            </child>
                           </object>
-                          <attributes>
-                            <attribute name="active">1</attribute>
-                          </attributes>
                         </child>
                       </object>
                     </child>
@@ -75,8 +109,8 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="install-delete">
-                        <property name="label">gtk-delete</property>
+                      <object class="GtkButton" id="install-remove">
+                        <property name="label">gtk-remove</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -107,13 +141,93 @@
               </packing>
             </child>
             <child>
-              <object class="GtkVBox" id="vbox3">
+              <object class="GtkVBox" id="backup-vbox">
                 <property name="visible">True</property>
                 <child>
-                  <placeholder/>
+                  <object class="GtkScrolledWindow" id="backup-scroll">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="vscrollbar_policy">automatic</property>
+                    <child>
+                      <object class="GtkTreeView" id="backup-tree">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="model">backup-treestore</property>
+                        <property name="headers_clickable">False</property>
+                        <property name="search_column">0</property>
+                        <property name="enable_tree_lines">True</property>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="backup-name">
+                            <property name="min_width">4</property>
+                            <property name="title">Name</property>
+                            <child>
+                              <object class="GtkCellRendererAccel" id="backup-cell-name">
+                                <property name="editable">True</property>
+                              </object>
+                              <attributes>
+                                <attribute name="alignment">1</attribute>
+                                <attribute name="text">0</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="backup-select">
+                            <property name="title">Select</property>
+                            <child>
+                              <object class="GtkCellRendererToggle" id="backup-cell-toggle"/>
+                              <attributes>
+                                <attribute name="active">1</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
                 </child>
                 <child>
-                  <placeholder/>
+                  <object class="GtkHButtonBox" id="backup-tool">
+                    <property name="visible">True</property>
+                    <property name="spacing">2</property>
+                    <property name="layout_style">start</property>
+                    <child>
+                      <object class="GtkButton" id="backup-add">
+                        <property name="label">gtk-add</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="backup-remove">
+                        <property name="label">gtk-remove</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -121,9 +235,9 @@
               </packing>
             </child>
             <child type="tab">
-              <object class="GtkLabel" id="label2">
+              <object class="GtkLabel" id="backup">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">page 2</property>
+                <property name="label" translatable="yes">Backup</property>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -131,12 +245,104 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkVBox" id="recover-vbox">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkScrolledWindow" id="recover-scroll">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="vscrollbar_policy">automatic</property>
+                    <child>
+                      <object class="GtkTreeView" id="recover-tree">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="model">recover-treestore</property>
+                        <property name="headers_clickable">False</property>
+                        <property name="search_column">0</property>
+                        <property name="enable_tree_lines">True</property>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="recover-name">
+                            <property name="min_width">4</property>
+                            <property name="title">Name</property>
+                            <child>
+                              <object class="GtkCellRendererAccel" id="recover-cell-name">
+                                <property name="editable">True</property>
+                              </object>
+                              <attributes>
+                                <attribute name="alignment">1</attribute>
+                                <attribute name="text">0</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="recover-select">
+                            <property name="title">Select</property>
+                            <child>
+                              <object class="GtkCellRendererToggle" id="recover-cell-toggle"/>
+                              <attributes>
+                                <attribute name="active">1</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHButtonBox" id="recover-tool">
+                    <property name="visible">True</property>
+                    <property name="spacing">2</property>
+                    <property name="layout_style">start</property>
+                    <child>
+                      <object class="GtkButton" id="recover-add">
+                        <property name="label">gtk-add</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="recover-remove">
+                        <property name="label">gtk-remove</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
             </child>
             <child type="tab">
-              <object class="GtkLabel" id="label3">
+              <object class="GtkLabel" id="recover">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">page 3</property>
+                <property name="yalign">0.49000000953674316</property>
+                <property name="label" translatable="yes">Recover</property>
               </object>
               <packing>
                 <property name="position">2</property>
@@ -174,6 +380,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="window-destroy"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -189,13 +396,5 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkTreeStore" id="install-treestore">
-    <columns>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-      <!-- column-name Select -->
-      <column type="gboolean"/>
-    </columns>
   </object>
 </interface>
