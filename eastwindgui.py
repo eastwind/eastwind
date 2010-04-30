@@ -14,21 +14,54 @@ class EastWindGUI:
         self.info = EastWind()
         self.info.load()
         self.builder = gtk.Builder()
+        self.addWindow  = gtk.Builder()
         self.builder.add_from_file("window.glade")
+        self.addWindow.add_from_file("addwindow.glade")
         self.builder.connect_signals({
-            "window-destroy": self.destroy
+            "window-destroy": self.destroy,
+            "showAddWindow" : self.showAddWindow
         })
+        self.addWindow.connect_signals({
+            "closeAddWindow": self.closeAddWindow,
+            "addSwitchPage" : self.addSwitchPage,
+            "netGetClick"   : self.netGetClick
+        })
+
         self.builder.get_object('install-cell-toggle').connect( 'toggled', self.toggled, self.builder.get_object('install-treestore'))
         self.builder.get_object('backup-cell-toggle').connect( 'toggled', self.toggled, self.builder.get_object('backup-treestore'))
         self.builder.get_object('recover-cell-toggle').connect( 'toggled', self.toggled, self.builder.get_object('recover-treestore'))
         self.install_model()
         self.backup_model()
         self.recover_model()
+        self.typeList_model()
         self.window = self.builder.get_object("EastWind")
+        self.addwindow = self.addWindow.get_object("AddWindow")
         self.window.show_all()
+
+    def typeList_model(self):
+        self.typeList = self.addWindow.get_object("typeList")
+        self.typeList.append( ["Install"] )
+        self.typeList.append( ["Backup"] )
+        self.typeList.append( ["Recovery"] )
+
+    def addSwitchPage(self, notebook , page , page_num ):
+        print page_num
+
+    def netGetClick( self, button ):
+        print "%s is clicked!" % button.get_label()
 
     def destroy(self, widget, data=None):
         gtk.main_quit()
+
+    def closeAddWindow( self, widget , data = None ):
+        self.addwindow.hide_all()
+
+    def showAddWindow( self, widget , data = None ):
+        self.addWindow.get_object("valueText").set_text("")
+        self.addWindow.get_object("typeComboBox").set_active(-1)
+        self.addwindow.show_all()
+        self.addWindow.get_object("addNotebook").set_current_page(0)
+        # set_current_page must after show_all, I don't know why...
 
     def install_model(self):
         self.install_tree = self.builder.get_object("install-treestore")

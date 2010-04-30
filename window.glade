@@ -30,6 +30,7 @@
     <property name="width_request">400</property>
     <property name="height_request">400</property>
     <property name="border_width">10</property>
+    <property name="title" translatable="yes">EastWind</property>
     <signal name="destroy_event" handler="window-destroy"/>
     <signal name="delete_event" handler="window-destroy"/>
     <child>
@@ -101,6 +102,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="clicked" handler="showAddWindow"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
