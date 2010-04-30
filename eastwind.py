@@ -7,6 +7,7 @@ from backup import *
 from info import *
 from time import *
 import os
+import types
 import re
 import sys
 
@@ -136,6 +137,28 @@ class EastWind:
             log.section("Executing post-install commands:")
             for s in self.data.info['post-install']:
                 os.system(s)
+
+    def get( self , url , fname = None ):
+        """ usage:
+            get files from internet by using wget
+            url should be a string object
+            if fname is not a string, use the last part of url as file name.
+            Ex:
+                get( "code.google.com/p/eastwind/issues/list" )
+                ==> fname = "list"
+        """
+        #TODO: better policy for generate fname ?
+        if type(url) != types.StringType :
+            log.error( "In EastWind.get()" )
+            log.error( "    url should be a string object" )
+            return
+        if type(fname) != types.StringType :
+            tmp = url.split("/")
+            tmp.reverse()
+            fname = tmp[0]
+            log.section( "set file name: %s" % fname )
+        log.section( "wget -O %s %s" % ( fname , url ) )
+        os.system( "wget -O %s %s" % ( fname , url ) )
 
 if __name__ == "__main__":
     e = EastWind()
