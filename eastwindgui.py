@@ -5,7 +5,7 @@
     Eastwind GUI with glade.
 """
 
-import gtk
+import gtk, vte
 from eastwind import *
 from info import *
 
@@ -76,6 +76,19 @@ class EastWindGUI:
             for i in range(model.iter_n_children(iter)):
                 self.toggle_recursive(model, model.iter_nth_child(iter, i), value)
 
+    def terminal_exec(self, funcs):
+        self.term = vte.Terminal()
+        self.term.connect('child-exited', self.exec_func)
+        self.termwin = gtk.Window()
+        #TODO: make the window uncloasable
+        self.termwin.add(self.term)
+        self.termwin.show_all()
+
+        self.info.cmd = self.term.fork_command
+        self.info.log.method = self.term.feed
+        #FIXME: not sure here
+        for i in funcs:
+            i()
 
 if __name__ == '__main__':
     e = EastWindGUI()

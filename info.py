@@ -7,12 +7,23 @@ This library deals with I/O of information between files and program.
 import ConfigParser, re
 
 class Prompt:
+    def __init__(self, output_method = None):
+        self.method = output_method
+
+    def put(self, s):
+        if(self.method == None):
+            print s
+        else:
+            self.method(s)
+
     def error(self, s):
-        print "\033[1;31m%s\033[0m" % s
+        self.put("\033[1;31m%s\033[0m" % s)
+
     def section(self, s):
-        print "\033[1;33m%s\033[0m" % s
+        self.put("\033[1;33m%s\033[0m" % s)
+
     def log(self, s):
-        print "%s" % s
+        self.put("%s" % s)
 
 class Info:
     def __init__(self):

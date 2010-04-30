@@ -15,6 +15,7 @@ class EastWind:
     data = Info()
 
     def cli(self):
+        self.cmd = os.system
         if len(sys.argv) == 1:
             self.load()
             self.recover()
@@ -34,7 +35,7 @@ class EastWind:
             else:
                 self.recover()
         else:
-            log.error("Error: The argument is not correct!")
+            log.error("Error: The argument %s is not correct!" % sys.argv[1])
 
     def to_install(self, pkg):
         #TODO: check if the pkg is installed correctly before adding it into json
@@ -119,24 +120,24 @@ class EastWind:
         if 'ppa' in self.data.info:
             log.section("Start adding sources:")
             for i in self.data.info['ppa']:
-                os.system("add-apt-repository %s" % i)
+                self.cmd("add-apt-repository %s" % i)
 
     def update(self):
         log.section("Updating:")
-        os.system("apt-get update")
+        self.cmd("apt-get update")
 
     def install(self):
         if 'pre-install' in self.data.info:
             log.section("Executing pre-install commands:")
             for s in self.data.info['pre-install']:
-                os.system(s)
+                self.cmd(s)
         if 'install' in self.data.info:
             log.section("Installing:")
-            os.system("apt-get install --yes %s" % " ".join(self.data.info['install']))
+            self.cmd("apt-get install --yes %s" % " ".join(self.data.info['install']))
         if 'post-install' in self.data.info:
             log.section("Executing post-install commands:")
             for s in self.data.info['post-install']:
-                os.system(s)
+                self.cmd(s)
 
     def get( self , url , fname = None ):
         """ usage:
@@ -152,13 +153,14 @@ class EastWind:
             log.error( "In EastWind.get()" )
             log.error( "    url should be a string object" )
             return
+        #TODO: what if 404 not found?
         if type(fname) != types.StringType :
             tmp = url.split("/")
             tmp.reverse()
             fname = tmp[0]
-            log.section( "set file name: %s" % fname )
-        log.section( "wget -O %s %s" % ( fname , url ) )
-        os.system( "wget -O %s %s" % ( fname , url ) )
+            log.section( "Set file name: %s" % fname )
+        log.log( "    Getting file %s from %s." % ( fname , url ) )
+        self.cmd( "wget -O %s %s" % ( fname , url ) )
 
 if __name__ == "__main__":
     e = EastWind()
