@@ -2,13 +2,7 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkListStore" id="typeList">
-    <columns>
-      <!-- column-name typeName -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkTreeStore" id="install-treestore">
+  <object class="GtkTreeStore" id="install_treestore">
     <columns>
       <!-- column-name Name -->
       <column type="gchararray"/>
@@ -16,7 +10,7 @@
       <column type="gboolean"/>
     </columns>
   </object>
-  <object class="GtkTreeStore" id="backup-treestore">
+  <object class="GtkTreeStore" id="backup_treestore">
     <columns>
       <!-- column-name Name -->
       <column type="gchararray"/>
@@ -24,12 +18,18 @@
       <column type="gboolean"/>
     </columns>
   </object>
-  <object class="GtkTreeStore" id="recover-treestore">
+  <object class="GtkTreeStore" id="recover_treestore">
     <columns>
       <!-- column-name Name -->
       <column type="gchararray"/>
       <!-- column-name Select -->
       <column type="gboolean"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="type_list">
+    <columns>
+      <!-- column-name type_name -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkWindow" id="EastWind">
@@ -37,38 +37,38 @@
     <property name="height_request">400</property>
     <property name="border_width">10</property>
     <property name="title" translatable="yes">EastWind</property>
-    <signal name="destroy_event" handler="window-destroy"/>
-    <signal name="delete_event" handler="window-destroy"/>
+    <signal name="destroy_event" handler="window_destroy"/>
+    <signal name="delete_event" handler="window_destroy"/>
     <child>
-      <object class="GtkVBox" id="layout-vbox">
+      <object class="GtkVBox" id="layout_vbox">
         <property name="visible">True</property>
         <child>
           <object class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <object class="GtkVBox" id="install-vbox">
+              <object class="GtkVBox" id="install_vbox">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkScrolledWindow" id="install-scroll">
+                  <object class="GtkScrolledWindow" id="install_scroll">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">automatic</property>
                     <property name="vscrollbar_policy">automatic</property>
                     <child>
-                      <object class="GtkTreeView" id="install-tree">
+                      <object class="GtkTreeView" id="install_tree">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="model">install-treestore</property>
+                        <property name="model">install_treestore</property>
                         <property name="headers_clickable">False</property>
                         <property name="search_column">0</property>
                         <property name="enable_tree_lines">True</property>
                         <child>
-                          <object class="GtkTreeViewColumn" id="install-name">
+                          <object class="GtkTreeViewColumn" id="install_name">
                             <property name="min_width">4</property>
                             <property name="title">Name</property>
                             <child>
-                              <object class="GtkCellRendererAccel" id="install-cell-name">
+                              <object class="GtkCellRendererAccel" id="install_cell_name">
                                 <property name="editable">True</property>
                               </object>
                               <attributes>
@@ -79,10 +79,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="install-select">
+                          <object class="GtkTreeViewColumn" id="install_select">
                             <property name="title">Select</property>
                             <child>
-                              <object class="GtkCellRendererToggle" id="install-cell-toggle"/>
+                              <object class="GtkCellRendererToggle" id="install_cell_toggle"/>
                               <attributes>
                                 <attribute name="active">1</attribute>
                               </attributes>
@@ -97,18 +97,18 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHButtonBox" id="install-tool">
+                  <object class="GtkHButtonBox" id="install_tool">
                     <property name="visible">True</property>
                     <property name="spacing">2</property>
                     <property name="layout_style">start</property>
                     <child>
-                      <object class="GtkButton" id="install-add">
+                      <object class="GtkButton" id="install_add">
                         <property name="label">gtk-add</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
-                        <signal name="clicked" handler="showAddWindow"/>
+                        <signal name="clicked" handler="show_add_notebook"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -117,7 +117,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="install-remove">
+                      <object class="GtkButton" id="install_remove">
                         <property name="label">gtk-remove</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -136,169 +136,6 @@
                     <property name="position">1</property>
                   </packing>
                 </child>
-                <child>
-                  <object class="GtkNotebook" id="install-add-notebook">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tab_pos">bottom</property>
-                    <child>
-              <object class="GtkTable" id="newTable">
-                <property name="visible">True</property>
-                <property name="n_rows">2</property>
-                <property name="n_columns">3</property>
-                <child>
-                  <object class="GtkLabel" id="LableType">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Type</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="LabelValue">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Value</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="valueText">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="invisible_char">&#x25CF;</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="newAdd">
-                    <property name="label" translatable="yes">Add</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <object class="GtkComboBox" id="typeComboBox">
-                    <property name="visible">True</property>
-                    <property name="model">typeList</property>
-                    <child>
-                      <object class="GtkCellRendererText" id="typeName"/>
-                      <attributes>
-                        <attribute name="text">0</attribute>
-                      </attributes>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-            <child type="tab">
-              <object class="GtkLabel" id="NewLabel">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">New Value</property>
-              </object>
-              <packing>
-                <property name="tab_fill">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label1">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Not Done Yet</property>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child type="tab">
-              <object class="GtkLabel" id="FileLabel">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Add from file</property>
-              </object>
-              <packing>
-                <property name="position">1</property>
-                <property name="tab_fill">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkHBox" id="Netbox">
-                <property name="height_request">10</property>
-                <property name="visible">True</property>
-                <property name="spacing">2</property>
-                <child>
-                  <object class="GtkLabel" id="UrlLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">url:</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="UrlText">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="invisible_char">&#x25CF;</property>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="UrlAdd">
-                    <property name="label" translatable="yes">Get</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <accelerator key="Return" signal="clicked"/>
-                    <signal name="clicked" handler="netGetClick"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child type="tab">
-              <object class="GtkLabel" id="NetLabel">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Add from net</property>
-              </object>
-              <packing>
-                <property name="position">2</property>
-                <property name="tab_fill">False</property>
-              </packing>
-            </child>
-                  </object>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
               </object>
             </child>
             <child type="tab">
@@ -312,28 +149,28 @@
               </packing>
             </child>
             <child>
-              <object class="GtkVBox" id="backup-vbox">
+              <object class="GtkVBox" id="backup_vbox">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkScrolledWindow" id="backup-scroll">
+                  <object class="GtkScrolledWindow" id="backup_scroll">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">automatic</property>
                     <property name="vscrollbar_policy">automatic</property>
                     <child>
-                      <object class="GtkTreeView" id="backup-tree">
+                      <object class="GtkTreeView" id="backup_tree">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="model">backup-treestore</property>
+                        <property name="model">backup_treestore</property>
                         <property name="headers_clickable">False</property>
                         <property name="search_column">0</property>
                         <property name="enable_tree_lines">True</property>
                         <child>
-                          <object class="GtkTreeViewColumn" id="backup-name">
+                          <object class="GtkTreeViewColumn" id="backup_name">
                             <property name="min_width">4</property>
                             <property name="title">Name</property>
                             <child>
-                              <object class="GtkCellRendererAccel" id="backup-cell-name">
+                              <object class="GtkCellRendererAccel" id="backup_cell_name">
                                 <property name="editable">True</property>
                               </object>
                               <attributes>
@@ -344,10 +181,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="backup-select">
+                          <object class="GtkTreeViewColumn" id="backup_select">
                             <property name="title">Select</property>
                             <child>
-                              <object class="GtkCellRendererToggle" id="backup-cell-toggle"/>
+                              <object class="GtkCellRendererToggle" id="backup_cell_toggle"/>
                               <attributes>
                                 <attribute name="active">1</attribute>
                               </attributes>
@@ -362,17 +199,18 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHButtonBox" id="backup-tool">
+                  <object class="GtkHButtonBox" id="backup_tool">
                     <property name="visible">True</property>
                     <property name="spacing">2</property>
                     <property name="layout_style">start</property>
                     <child>
-                      <object class="GtkButton" id="backup-add">
+                      <object class="GtkButton" id="backup_add">
                         <property name="label">gtk-add</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="clicked" handler="show_add_notebook"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -381,7 +219,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="backup-remove">
+                      <object class="GtkButton" id="backup_remove">
                         <property name="label">gtk-remove</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -416,28 +254,28 @@
               </packing>
             </child>
             <child>
-              <object class="GtkVBox" id="recover-vbox">
+              <object class="GtkVBox" id="recover_vbox">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkScrolledWindow" id="recover-scroll">
+                  <object class="GtkScrolledWindow" id="recover_scroll">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">automatic</property>
                     <property name="vscrollbar_policy">automatic</property>
                     <child>
-                      <object class="GtkTreeView" id="recover-tree">
+                      <object class="GtkTreeView" id="recover_tree">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="model">recover-treestore</property>
+                        <property name="model">recover_treestore</property>
                         <property name="headers_clickable">False</property>
                         <property name="search_column">0</property>
                         <property name="enable_tree_lines">True</property>
                         <child>
-                          <object class="GtkTreeViewColumn" id="recover-name">
+                          <object class="GtkTreeViewColumn" id="recover_name">
                             <property name="min_width">4</property>
                             <property name="title">Name</property>
                             <child>
-                              <object class="GtkCellRendererAccel" id="recover-cell-name">
+                              <object class="GtkCellRendererAccel" id="recover_cell_name">
                                 <property name="editable">True</property>
                               </object>
                               <attributes>
@@ -448,10 +286,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="recover-select">
+                          <object class="GtkTreeViewColumn" id="recover_select">
                             <property name="title">Select</property>
                             <child>
-                              <object class="GtkCellRendererToggle" id="recover-cell-toggle"/>
+                              <object class="GtkCellRendererToggle" id="recover_cell_toggle"/>
                               <attributes>
                                 <attribute name="active">1</attribute>
                               </attributes>
@@ -466,17 +304,18 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHButtonBox" id="recover-tool">
+                  <object class="GtkHButtonBox" id="recover_tool">
                     <property name="visible">True</property>
                     <property name="spacing">2</property>
                     <property name="layout_style">start</property>
                     <child>
-                      <object class="GtkButton" id="recover-add">
+                      <object class="GtkButton" id="recover_add">
                         <property name="label">gtk-add</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="clicked" handler="show_add_notebook"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -485,7 +324,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="recover-remove">
+                      <object class="GtkButton" id="recover_remove">
                         <property name="label">gtk-remove</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -526,7 +365,191 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHButtonBox" id="layout-button">
+          <object class="GtkNotebook" id="add_notebook">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="tab_pos">bottom</property>
+            <child>
+              <object class="GtkTable" id="new_table">
+                <property name="visible">True</property>
+                <property name="n_rows">2</property>
+                <property name="n_columns">3</property>
+                <child>
+                  <object class="GtkLabel" id="type_label">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Type</property>
+                  </object>
+                  <packing>
+                    <property name="x_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="value_label">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Value</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="value_text">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">&#x25CF;</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBox" id="type_combo_box">
+                    <property name="visible">True</property>
+                    <property name="model">type_list</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="type_name"/>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="x_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="new_add_button">
+                    <property name="label" translatable="yes">Add</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="x_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAspectFrame" id="aspect_frame">
+                    <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="x_options"></property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="new_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">New Value</property>
+              </object>
+              <packing>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="not_done_yet">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Not Done Yet</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="file_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Add from file</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHBox" id="net_hbox">
+                <property name="height_request">10</property>
+                <property name="visible">True</property>
+                <property name="spacing">2</property>
+                <child>
+                  <object class="GtkLabel" id="url_label">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">url:</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="url_text">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">&#x25CF;</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="url_add">
+                    <property name="label" translatable="yes">Get</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <accelerator key="Return" signal="clicked"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="net_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Add from net</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHButtonBox" id="layout_button">
             <property name="visible">True</property>
             <property name="spacing">2</property>
             <property name="layout_style">end</property>
@@ -551,7 +574,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
-                <signal name="clicked" handler="window-destroy"/>
+                <signal name="clicked" handler="window_destroy"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -562,11 +585,10 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
     </child>
   </object>
 </interface>
-

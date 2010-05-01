@@ -18,9 +18,9 @@ class EastWindGUI:
         self.builder.add_from_file("window.glade")
         #self.builder.add_from_file("builder.glade")
         self.builder.connect_signals({
-            "window-destroy": self.destroy,
+            "window_destroy": self.destroy,
             #"addSwitchPage" : self.addSwitchPage,
-            "showAddWindow": self.toggle_install_notebook
+            "show_add_notebook": self.toggle_add_notebook
         })
         #self.builder.connect_signals({
             #"closebuilder": self.closebuilder,
@@ -28,24 +28,24 @@ class EastWindGUI:
             #"netGetClick"   : self.netGetClick
         #})
 
-        self.builder.get_object('install-cell-toggle').connect( 'toggled', self.toggled, self.builder.get_object('install-treestore'))
-        self.builder.get_object('backup-cell-toggle').connect( 'toggled', self.toggled, self.builder.get_object('backup-treestore'))
-        self.builder.get_object('recover-cell-toggle').connect( 'toggled', self.toggled, self.builder.get_object('recover-treestore'))
+        self.builder.get_object('install_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('install_treestore'))
+        self.builder.get_object('backup_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('backup_treestore'))
+        self.builder.get_object('recover_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('recover_treestore'))
         self.install_model()
         self.backup_model()
         self.recover_model()
-        self.typeList_model()
+        self.type_list_model()
         self.window = self.builder.get_object("EastWind")
         #self.builder = self.builder.get_object("builder")
-        self.install_notebook = self.builder.get_object('install-add-notebook')
+        self.add_notebook = self.builder.get_object('add_notebook')
         self.window.show_all()
-        self.install_notebook.hide_all()
+        self.add_notebook.hide_all()
 
-    def typeList_model(self):
-        self.typeList = self.builder.get_object("typeList")
-        self.typeList.append( ["Install"] )
-        self.typeList.append( ["Backup"] )
-        self.typeList.append( ["Recovery"] )
+    def type_list_model(self):
+        self.type_list = self.builder.get_object("type_list")
+        self.type_list.append( ["Install"] )
+        self.type_list.append( ["Backup"] )
+        self.type_list.append( ["Recover"] )
 
     #def addSwitchPage(self, notebook , page , page_num ):
     #    print page_num
@@ -56,18 +56,18 @@ class EastWindGUI:
     def destroy(self, widget, data=None):
         gtk.main_quit()
 
-    def toggle_install_notebook( self, widget , data = None ):
-        if self.install_notebook.get_property('visible') == True:
-            self.install_notebook.hide_all()
+    def toggle_add_notebook( self, button ):
+        if self.add_notebook.get_property('visible') == True:
+            self.add_notebook.hide_all()
         else:
-            self.install_notebook.show_all()
-        self.builder.get_object("valueText").set_text("")
-        self.builder.get_object("typeComboBox").set_active(-1)
-        self.install_notebook.set_current_page(0)
+            self.add_notebook.show_all()
+        self.builder.get_object("value_text").set_text("")
+        self.builder.get_object("type_combo_box").set_active(-1)
+        self.add_notebook.set_current_page(0)
         # set_current_page must after show_all, I don't know why...
 
     def install_model(self):
-        self.install_tree = self.builder.get_object("install-treestore")
+        self.install_tree = self.builder.get_object("install_treestore")
         for n,p in self.info.data.parsers.items():
             parent = self.install_tree.append(None, (n, None))
             for s in p.sections():
@@ -78,7 +78,7 @@ class EastWindGUI:
                             self.install_tree.append(subparent, (t, None))
 
     def backup_model(self):
-        self.backup_tree = self.builder.get_object("backup-treestore")
+        self.backup_tree = self.builder.get_object("backup_treestore")
         for n,p in self.info.data.parsers.items():
             parent = self.backup_tree.append(None, (n, None))
             for s in p.sections():
@@ -90,7 +90,7 @@ class EastWindGUI:
 
     def recover_model(self):
         dirs = self.info.load_recover()
-        self.recover_tree = self.builder.get_object("recover-treestore")
+        self.recover_tree = self.builder.get_object("recover_treestore")
         for d in dirs:
             conf = Info()
             conf.read("backup/%s/backup.conf" % d)
