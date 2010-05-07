@@ -18,17 +18,19 @@
       <column type="gboolean"/>
     </columns>
   </object>
+  <object class="GtkListStore" id="type_list">
+    <columns>
+      <!-- column-name type_name -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkTreeStore" id="recover_treestore">
     <columns>
       <!-- column-name Name -->
       <column type="gchararray"/>
       <!-- column-name Select -->
       <column type="gboolean"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="type_list">
-    <columns>
-      <!-- column-name type_name -->
+      <!-- column-name Path -->
       <column type="gchararray"/>
     </columns>
   </object>

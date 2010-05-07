@@ -27,6 +27,7 @@ class EastWindGUI:
 
             #"netGetClick"   : self.netGetClick
         #})
+        self.builder.get_object('ok').connect('clicked', self.go)
 
         self.builder.get_object('install_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('install_treestore'))
         self.builder.get_object('backup_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('backup_treestore'))
@@ -94,9 +95,9 @@ class EastWindGUI:
         for d in dirs:
             conf = Info()
             conf.read("backup/%s/backup.conf" % d)
-            parent = self.recover_tree.append(None, (d, None))
+            parent = self.recover_tree.append(None, (d, None, None))
             for s,t in conf.info.items():
-                self.recover_tree.append(parent, (s, None))
+                self.recover_tree.append(parent, (s, None, t[0]))
 
     def toggled( self, cell, path, model ):
         """ Sets the toggled state on the toggle button to true or false. """
@@ -112,6 +113,20 @@ class EastWindGUI:
             for i in range(model.iter_n_children(iter)):
                 self.toggle_recursive(model, model.iter_nth_child(iter, i), value)
 
+    def go(self, data):
+        for mode in ['install', 'backup', 'recover']:
+            self.info.data.info[mode] = []
+            self.builder.get_object('%s_treestore' % mode).foreach(self.add_list, mode)
+        self.terminal_exec([self.info.install])
+        # FIXME: backup and recover are needed
+        # TODO: add the pre/post install action
+
+    def add_list(self, model, path, iter, mode):
+        if mode == "recover" and model.iter_depth(iter) == 1 and model.get_value(iter, 1) == True:
+            self.info.data.info[mode].append([model.get_value(iter, 0), model.get_value(iter, 2)])
+        elif model.iter_depth(iter) == 2 and model.get_value(iter, 1) == True:
+            self.info.data.info[mode].append(model.get_value(iter, 0))
+
     def terminal_exec(self, funcs):
         self.term = vte.Terminal()
         self.termwin = gtk.Window()
@@ -120,7 +135,7 @@ class EastWindGUI:
         self.termwin.show_all()
 
         self.info.cmd = self.term.fork_command
-        self.info.log.method = self.term.feed
+        log.method = self.term.feed
         #FIXME: not sure here
         for i in funcs:
             i()
