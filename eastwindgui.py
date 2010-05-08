@@ -133,12 +133,12 @@ class EastWindGUI:
         #TODO: make the window uncloasable
         self.termwin.add(self.term)
         self.termwin.show_all()
-
-        self.info.cmd = self.term.fork_command
-        log.method = self.term.feed
-        #FIXME: not sure here
+        #FIXME: do something with sudo
+        self.info.cmd = lambda x: self.term.fork_command(x.split(' ')[0], ['']+x.split(' ')[1:])
+        log.method = lambda x: self.term.feed("%s\n\r" % x)
         for i in funcs:
             i()
+        #TODO: do something when finish
 
 if __name__ == '__main__':
     e = EastWindGUI()
