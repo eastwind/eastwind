@@ -11,6 +11,7 @@ from info import *
 
 class EastWindGUI:
     def __init__(self):
+        self.install_tmp = None
         self.info = EastWind()
         self.info.load()
         self.builder = gtk.Builder()
@@ -32,6 +33,7 @@ class EastWindGUI:
         self.builder.get_object('install_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('install_treestore'))
         self.builder.get_object('backup_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('backup_treestore'))
         self.builder.get_object('recover_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('recover_treestore'))
+        self.builder.get_object('new_add_button').connect( 'clicked' , self.new_add_clicked ) ;
         self.install_model()
         self.backup_model()
         self.recover_model()
@@ -50,6 +52,14 @@ class EastWindGUI:
 
     #def addSwitchPage(self, notebook , page , page_num ):
     #    print page_num
+    def new_add_clicked( self , data ):
+        combo = self.builder.get_object("type_combo_box").get_active()
+        if combo == 0: #type == install
+            self.add_install( self.builder.get_object("value_text").get_text())
+        if combo == 1: #type == backup
+            self.add_backup( self.builder.get_object("value_text").get_text())
+        if combo == 2: #type == recover
+            self.add_recover( self.builder.get_object("value_text").get_text())
 
     #def netGetClick( self, button ):
     #    print "%s is clicked!" % button.get_label()
@@ -66,6 +76,21 @@ class EastWindGUI:
         self.builder.get_object("type_combo_box").set_active(-1)
         self.add_notebook.set_current_page(0)
         # set_current_page must after show_all, I don't know why...
+
+    def add_install( self , text ):
+        if self.install_tmp == None :
+            self.install_tmp = self.install_tree.append(None,( "This time only" , None ))
+        self.install_tree.append( self.install_tmp , (text,None)) ;
+
+    def add_backup( self , text ):
+        if self.backup_tmp == none :
+            self.backup_tmp = self.backup_tree.append(None,( "This time only" , None ))
+        self.backup_tree.append( self.backup_tmp , (text,None)) ;
+
+    def add_recover( self , text ):
+        if self.recover_tmp == None :
+            self.recover_tmp = self.recover_tree.append(None,( "This time only" , None ))
+        self.recover_tree.append( self.recover_tmp , (text,None)) ;
 
     def install_model(self):
         self.install_tree = self.builder.get_object("install_treestore")
@@ -134,11 +159,18 @@ class EastWindGUI:
         self.termwin.add(self.term)
         self.termwin.show_all()
         #FIXME: do something with sudo
-        self.info.cmd = lambda x: self.term.fork_command(x.split(' ')[0], ['']+x.split(' ')[1:])
+        #self.info.cmd = lambda x: self.term.fork_command(x.split(' ')[0], ['']+x.split(' ')[1:])
+        self.info.cmd = self.fork_cmd
         log.method = lambda x: self.term.feed("%s\n\r" % x)
+        #self.term.feed( "ls\n" )
         for i in funcs:
             i()
         #TODO: do something when finish
+
+    def fork_cmd(self,x):
+        print x
+        self.term.fork_command(x.split(' ')[0], ['']+x.split(' ')[1:])
+
 
 if __name__ == '__main__':
     e = EastWindGUI()
