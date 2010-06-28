@@ -12,6 +12,8 @@ from info import *
 class EastWindGUI:
     def __init__(self):
         self.install_tmp = None
+        self.backup_tmp = None
+        self.recover_tmp = None
         self.info = EastWind()
         self.info.load()
         self.builder = gtk.Builder()
