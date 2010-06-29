@@ -2,14 +2,6 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkTreeStore" id="install_treestore">
-    <columns>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-      <!-- column-name Select -->
-      <column type="gboolean"/>
-    </columns>
-  </object>
   <object class="GtkTreeStore" id="backup_treestore">
     <columns>
       <!-- column-name Name -->
@@ -31,6 +23,20 @@
       <!-- column-name Select -->
       <column type="gboolean"/>
       <!-- column-name Path -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkTreeStore" id="install_treestore">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+      <!-- column-name Select -->
+      <column type="gboolean"/>
+      <!-- column-name pre -->
+      <column type="gchararray"/>
+      <!-- column-name ppa -->
+      <column type="gchararray"/>
+      <!-- column-name post -->
       <column type="gchararray"/>
     </columns>
   </object>
@@ -70,9 +76,7 @@
                             <property name="min_width">4</property>
                             <property name="title">Name</property>
                             <child>
-                              <object class="GtkCellRendererAccel" id="install_cell_name">
-                                <property name="editable">True</property>
-                              </object>
+                              <object class="GtkCellRendererAccel" id="install_cell_name"/>
                               <attributes>
                                 <attribute name="alignment">1</attribute>
                                 <attribute name="text">0</attribute>
@@ -86,7 +90,47 @@
                             <child>
                               <object class="GtkCellRendererToggle" id="install_cell_toggle"/>
                               <attributes>
+                                <attribute name="sensitive">27</attribute>
                                 <attribute name="active">1</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="install_pre">
+                            <property name="title">Pre-Install</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="install_cell_pre">
+                                <property name="editable">True</property>
+                              </object>
+                              <attributes>
+                                <attribute name="text">2</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="install_ppa">
+                            <property name="title">PPA</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="install_cell_ppa">
+                                <property name="editable">True</property>
+                              </object>
+                              <attributes>
+                                <attribute name="text">3</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="install_post">
+                            <property name="title">Post-Install</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="install_cell_post">
+                                <property name="editable">True</property>
+                              </object>
+                              <attributes>
+                                <attribute name="text">4</attribute>
                               </attributes>
                             </child>
                           </object>

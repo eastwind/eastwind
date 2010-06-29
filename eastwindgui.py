@@ -24,6 +24,7 @@ class EastWindGUI:
             "window_destroy": self.destroy,
             #"addSwitchPage" : self.addSwitchPage,
             "show_add_notebook": self.toggle_add_notebook
+            #"text_changed":self.text_changed
         })
         #self.builder.connect_signals({
             #"closebuilder": self.closebuilder,
@@ -36,6 +37,9 @@ class EastWindGUI:
         self.builder.get_object('backup_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('backup_treestore'))
         self.builder.get_object('recover_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('recover_treestore'))
         self.builder.get_object('new_add_button').connect( 'clicked' , self.new_add_clicked ) ;
+        self.builder.get_object('install_cell_pre').connect( 'edited', self.text_changed, self.builder.get_object('install_treestore') , 2 )
+        self.builder.get_object('install_cell_ppa').connect( 'edited', self.text_changed, self.builder.get_object('install_treestore') , 3 )
+        self.builder.get_object('install_cell_post').connect( 'edited', self.text_changed, self.builder.get_object('install_treestore') , 4 )
         self.install_model()
         self.backup_model()
         self.recover_model()
@@ -79,6 +83,9 @@ class EastWindGUI:
         self.add_notebook.set_current_page(0)
         # set_current_page must after show_all, I don't know why...
 
+    def text_changed( self , cell , path , new_text , model , col ):
+        model[path][col] = new_text
+
     def add_install( self , text ):
         if self.install_tmp == None :
             self.install_tmp = self.install_tree.append(None,( "This time only" , None ))
@@ -97,13 +104,13 @@ class EastWindGUI:
     def install_model(self):
         self.install_tree = self.builder.get_object("install_treestore")
         for n,p in self.info.data.parsers.items():
-            parent = self.install_tree.append(None, (n, None))
+            parent = self.install_tree.append(None, (n, None,"","",""))
             for s in p.sections():
-                subparent = self.install_tree.append(parent, (s, None))
+                subparent = self.install_tree.append(parent, (s, None,"","",""))
                 for i in p.items(s):
                     if i[0] == 'install':
                         for t in i[1].split(' '):
-                            self.install_tree.append(subparent, (t, None))
+                            self.install_tree.append(subparent, (t, None,"","",""))
 
     def backup_model(self):
         self.backup_tree = self.builder.get_object("backup_treestore")
