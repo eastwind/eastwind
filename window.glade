@@ -76,7 +76,9 @@
                             <property name="min_width">4</property>
                             <property name="title">Name</property>
                             <child>
-                              <object class="GtkCellRendererAccel" id="install_cell_name"/>
+                              <object class="GtkCellRendererText" id="install_cell_name">
+                                <property name="editable">True</property>
+                              </object>
                               <attributes>
                                 <attribute name="alignment">1</attribute>
                                 <attribute name="text">0</attribute>
@@ -154,7 +156,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
-                        <signal name="clicked" handler="show_add_notebook"/>
+                        <signal name="clicked" handler="add_clicked"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -256,7 +258,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
-                        <signal name="clicked" handler="show_add_notebook"/>
+                        <signal name="clicked" handler="add_clicked"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -361,7 +363,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
-                        <signal name="clicked" handler="show_add_notebook"/>
+                        <signal name="clicked" handler="add_clicked"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>

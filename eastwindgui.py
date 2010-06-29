@@ -22,8 +22,9 @@ class EastWindGUI:
         #self.builder.add_from_file("builder.glade")
         self.builder.connect_signals({
             "window_destroy": self.destroy,
+            "add_clicked": self.add_clicked
             #"addSwitchPage" : self.addSwitchPage,
-            "show_add_notebook": self.toggle_add_notebook
+            #"show_add_notebook": self.toggle_add_notebook
             #"text_changed":self.text_changed
         })
         #self.builder.connect_signals({
@@ -36,7 +37,8 @@ class EastWindGUI:
         self.builder.get_object('install_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('install_treestore'))
         self.builder.get_object('backup_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('backup_treestore'))
         self.builder.get_object('recover_cell_toggle').connect( 'toggled', self.toggled, self.builder.get_object('recover_treestore'))
-        self.builder.get_object('new_add_button').connect( 'clicked' , self.new_add_clicked ) ;
+        #self.builder.get_object('new_add_button').connect( 'clicked' , self.new_add_clicked ) ;
+        self.builder.get_object('install_cell_name').connect( 'edited', self.text_changed, self.builder.get_object('install_treestore') , 0 )
         self.builder.get_object('install_cell_pre').connect( 'edited', self.text_changed, self.builder.get_object('install_treestore') , 2 )
         self.builder.get_object('install_cell_ppa').connect( 'edited', self.text_changed, self.builder.get_object('install_treestore') , 3 )
         self.builder.get_object('install_cell_post').connect( 'edited', self.text_changed, self.builder.get_object('install_treestore') , 4 )
@@ -58,14 +60,35 @@ class EastWindGUI:
 
     #def addSwitchPage(self, notebook , page , page_num ):
     #    print page_num
-    def new_add_clicked( self , data ):
-        combo = self.builder.get_object("type_combo_box").get_active()
-        if combo == 0: #type == install
-            self.add_install( self.builder.get_object("value_text").get_text())
-        if combo == 1: #type == backup
-            self.add_backup( self.builder.get_object("value_text").get_text())
-        if combo == 2: #type == recover
-            self.add_recover( self.builder.get_object("value_text").get_text())
+    def add_clicked( self , data ):
+        page = self.builder.get_object("notebook").get_current_page()
+        if page == 0:
+            tree = "install_tree"
+            node = ( "New Element" , None , "" , "" , "" )
+        elif page == 1:
+            tree = "backup_tree"
+            node = ( "New Element" , None )
+        elif page == 2:
+            tree = "recover_tree"
+            node = ( "New Element" , None )
+        else:
+            return
+        path = self.builder.get_object(tree).get_cursor()[0]
+        model = self.builder.get_object(tree + "store")
+
+        if path == None:
+            model.append(None,node)
+            return
+
+        p = model.get_iter(path)
+        model.append(p,node)
+        #combo = self.builder.get_object("type_combo_box").get_active()
+        #if combo == 0: #type == install
+        #    self.add_install( self.builder.get_object("value_text").get_text())
+        #if combo == 1: #type == backup
+        #    self.add_backup( self.builder.get_object("value_text").get_text())
+        #if combo == 2: #type == recover
+        #    self.add_recover( self.builder.get_object("value_text").get_text())
 
     #def netGetClick( self, button ):
     #    print "%s is clicked!" % button.get_label()
