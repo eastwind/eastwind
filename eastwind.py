@@ -6,10 +6,13 @@ Main script for setting recovering
 from backup import *
 from info import *
 from time import *
+import environ
+
 import os
 import types
 import re
 import sys
+import urllib2
 
 class EastWind:
     data = Info()
@@ -83,8 +86,9 @@ class EastWind:
         log.section("Start to backup files:")
         folder = strftime("%Y-%m-%d-%H-%M-%S")
         backupconf = Info()
-        os.makedirs(os.path.abspath("backup/%s" % folder))
-        conf = backupconf.new_parser("backup/%s/backup.conf" % folder)
+        os.makedirs(os.path.abspath("%s/%s" % (environ.backup_dir, folder)))
+        conf = backupconf.new_parser("%s/%s/backup.conf" %
+                                     (environ.backup_dir, folder))
         conf.add_section('Backuped')
         if 'backup' in self.data.info:
             for b in self.data.info['backup']:
@@ -103,7 +107,7 @@ class EastWind:
             if len(dirs) == 0:
                 return
             version = max(dirs)
-        path = "backup/%s/backup.conf" % version
+        path = "%s/%s/backup.conf" % (environ.backup_dir, version)
         if not os.path.exists(path):
             log.error("    Error: Config file %s not exist!" % path)
             return
@@ -141,7 +145,7 @@ class EastWind:
 
     def get( self , url , fname = None ):
         """ usage:
-            get files from internet by using wget
+            get files from internet by using urllib
             url should be a string object
             if fname is not a string, use the last part of url as file name.
             Ex:
@@ -160,7 +164,12 @@ class EastWind:
             fname = tmp[0]
             log.section( "Set file name: %s" % fname )
         log.log( "    Getting file %s from %s." % ( fname , url ) )
-        self.cmd( "wget -O %s %s" % ( fname , url ) )
+
+        f = open(fname, 'w')
+        data = urllib2.urlopen(url).read()
+        f.write(data)
+        f.close()
+
 
 if __name__ == "__main__":
     e = EastWind()

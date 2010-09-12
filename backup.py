@@ -2,6 +2,8 @@ import os
 import shutil
 import hashlib
 import time
+
+import environ
 from info import log
 
 """
@@ -16,7 +18,7 @@ class NotFoundError(Exception):
 def backup_path(file, version):
     """ Hash the filename with time variant. """
     hashed = hashlib.sha1("%s-%f" % (file, time.time())).hexdigest()
-    return "backup/%s/%s.tar.bz2" % (version, hashed)
+    return "%s/%s/%s.tar.bz2" % (environ.backup_dir, version, hashed)
 
 def backup(file, version):
     """ Backup the files to destination. """
