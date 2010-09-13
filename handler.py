@@ -9,13 +9,18 @@ class EastwindHandler:
     #TODO: maybe this should be a singleton
 
     def __init__(self):
-        self.manager = EastwindPkgManager()
+        self.pkg_manager = EastwindPkgManager()
 
     def react(self, action, arg):
+        """
+            React to different operations
+            action: atomic action name, ex: source, install ...
+            args: argument(s) for each atomic actions
+        """
         if action == 'source':
             pass
         elif action == 'install':
-            pass
+            self.pkg_manager.install([arg])
         elif action == 'config':
             pass
         elif action == 'exec':
@@ -23,5 +28,5 @@ class EastwindHandler:
         elif action == 'download':
             pass
         else:
-            raise NoActionError
+            raise ValueError
 
