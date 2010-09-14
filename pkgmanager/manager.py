@@ -50,3 +50,11 @@ class EastwindPkgManager:
         '''
         print 'Purging %s...' % (' '.join(pkgs))
         self.agent.purge(pkgs)
+
+    def add_external_sources(self, sources):
+        '''
+        Add external sources like PPA for Debian or AUR for Arch
+        sources: a list of sources to add
+        '''
+        print 'Adding external sources: %s' % sources
+        self.agent.add_external_sources(sources)

@@ -44,3 +44,10 @@ class EastwindPkgMangerAPT(EastwindPkgMangerSkeleton):
                                   stdin=subprocess.PIPE,
                                   shell=True)
         stdout, stderr = handle.communicate('y\n')
+
+    def add_external_sources(self, sources):
+        utils.need_root_access('add-apt-repository')
+        for source in sources:
+            print 'Adding %s to system...' % source
+            handle = subprocess.Popen('sudo add-apt-repository %s' % source,
+                                      shell=True).wait()

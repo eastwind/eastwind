@@ -18,3 +18,6 @@ class EastwindPkgMangerSkeleton:
 
     def purge(self, pkgs):
         raise NotImplementedError
+
+    def add_external_sources(self, args):
+        raise NotImplementedError
