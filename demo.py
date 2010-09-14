@@ -8,3 +8,4 @@ from pkgmanager.manager import EastwindPkgManager
 
 mgr = EastwindPkgManager()
 mgr.install(['gummi-beta gummi'])
+
