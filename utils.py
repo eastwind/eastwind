@@ -2,14 +2,19 @@
 Eastwind utils
 '''
 
+import logging
+import logging.handlers
 import os
-import sys
 import subprocess
+import sys
 
-# TODO: implement a logging/debugging interface
+CONFIG_DIR = os.path.expanduser('~/.config/eastwind')
+LOG_FILE = os.path.expanduser('~/.config/eastwind/eastwind.log')
 
-def need_root_access():
+try:
+    os.mkdir(CONFIG_DIR)
+except OSError: pass
+
+def need_root_access(name):
     if not 0 ==  os.geteuid():
-        print 'Error: please run eastwind with sudo'
-        sys.exit(1)
-
+        subprocess.Popen('sudo -v', shell=True).wait()

@@ -9,38 +9,38 @@ from manager_base import EastwindPkgMangerSkeleton
 
 class EastwindPkgMangerAPT(EastwindPkgMangerSkeleton):
     def update(self):
-        utils.need_root_access()
-        handle = subprocess.Popen('sudo aptitude update',
-                                  shell=True,
-                                  stdin=subprocess.PIPE,
-                                  stdout=subprocess.PIPE).wait()
-
-    def upgrade(self):
-        utils.need_root_access()
-        handle = subprocess.Popen('sudo aptitude upgrade',
-                                  shell=True,
-                                  stdin=subprocess.PIPE,
-                                  stdout=subprocess.PIPE)
+        utils.need_root_access('apt-get update')
+        handle = subprocess.Popen('sudo apt-get update',
+                                  shell=True)
         stdout, stderr = handle.communicate('y\n')
 
+    def upgrade(self):
+        utils.need_root_access('apt-get upgrade')
+        handle = subprocess.Popen('sudo apt-get upgrade',
+                                  shell=True).wait()
+
     def install(self, pkgs):
-        utils.need_root_access()
-        handle = subprocess.Popen('sudo aptitude install %s' % (" ".join(pkgs)),
-                                  shell=True,
+        utils.need_root_access('apt-get install')
+        handle = subprocess.Popen('sudo apt-get install %s'
+                                  % (" ".join(pkgs)),
                                   stdin=subprocess.PIPE,
-                                  stdout=subprocess.PIPE)
+                                  shell=True)
         stdout, stderr = handle.communicate('y\n')
 
     def install_interactive(self, pkgs):
-        # TODO: replace this with a shell script instead?
-        utils.need_root_access()
+        utils.need_root_access('apt-get install')
         handle = subprocess.Popen('sudo apt-get %s' % (" ".join(pkgs)),
-                                  shell=True)
+                                  shell=True).wait()
 
     def purge(self, pkgs):
-        utils.need_root_access()
-        handle = subprocess.Popen('sudo aptitude purge %s' % (" ".join(pkgs)),
-                                  shell=True,
+        utils.need_root_access('apt-get remove')
+        handle = subprocess.Popen('sudo apt-get remove --purge %s'
+                                  % (" ".join(pkgs)),
                                   stdin=subprocess.PIPE,
-                                  stdout=subprocess.PIPE)
+                                  shell=True)
+        stdout, stderr = handle.communicate('y\n')
+        handle = subprocess.Popen('sudo apt-get autoremove --purge %s'
+                                  % (" ".join(pkgs)),
+                                  stdin=subprocess.PIPE,
+                                  shell=True)
         stdout, stderr = handle.communicate('y\n')
