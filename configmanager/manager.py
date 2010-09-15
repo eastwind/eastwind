@@ -14,36 +14,17 @@ class NotFoundError(Exception):
 class EastwindConfigManager:
     """ Manager for config backup/recover """
 
-    def __init__(self, orig_path, backup_path):
-        self.orig_path = orig_path
-        self.backup_path = backup_path
+    def __init__(self):
+        pass
 
-    def backup(file, version):
+    def backup(self, orig_path):
         """ Backup the files to destination. """
-        path = os.path.expanduser(file)
-        if os.path.exists(path) == False:
-            raise NotFoundError(path)
-        # Tar the target into a single file
-        filename = backup_path(path, version)
-        os.system("cd %s && tar -jpc -f %s ./%s" % (
-           os.path.split(os.path.abspath(path))[0],\
-           os.path.abspath(filename),\
-           os.path.split(os.path.abspath(path))[1] )
-        )
-        return filename
+        pass
 
     def recover(file, dest):
         """ Copy the backed file to that path. """
-        file = os.path.abspath(file)
-        dest = os.path.expanduser(dest)
+        pass
 
-        if os.path.exists(file) == False:
-            raise NotFoundError(file)
-        if os.path.exists(dest) == False:
-            os.makedirs(os.path.expanduser(dest))
-
-        os.system("tar -xjp -f %s -C %s" % (file, os.path.split(dest)[0]))
-
-    def __hash(self, path):
-        return hashlib.sha1("%s-%f" % (path, time.time())).hexdigest()
+    def __generate_backup_path(self, path):
+        self.backup_path = hashlib.sha1("%s-%f" % (path, time.time())).hexdigest()
 
