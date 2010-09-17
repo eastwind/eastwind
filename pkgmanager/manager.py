@@ -2,15 +2,17 @@
 Eastwind Package Management Interface
 '''
 
+import platform
+
 from apt_series import EastwindPkgMangerAPT
-#from rpm_series import EastwindPkgMangerRPM
+from yum_series import EastwindPkgMangerYUM
 
 class EastwindPkgManager:
     def __init__(self):
         '''
         Guess the target package management system and assign a agent to it
         '''
-        self.agent = EastwindPkgMangerAPT()
+        pass
 
     def update(self):
         '''

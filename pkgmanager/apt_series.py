@@ -11,13 +11,13 @@ class EastwindPkgMangerAPT(EastwindPkgMangerSkeleton):
     def update(self):
         utils.need_root_access('apt-get update')
         handle = subprocess.Popen('sudo apt-get update',
-                                  shell=True)
-        stdout, stderr = handle.communicate('y\n')
+                                  shell=True).wait()
 
     def upgrade(self):
         utils.need_root_access('apt-get upgrade')
         handle = subprocess.Popen('sudo apt-get upgrade',
-                                  shell=True).wait()
+                                  shell=True)
+        stdout, stderr = handle.communicate('y\n')
 
     def install(self, pkgs):
         utils.need_root_access('apt-get install')
