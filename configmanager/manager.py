@@ -5,13 +5,14 @@
 import utils
 import os
 import shutil
+import tarfile
 
 class EastwindConfigManager:
     """ Manager for config backup/recover """
 
     def __init__(self, backup_path):
         self.backup_path = backup_path
-        self.config = os.path.join(self.backup_path, 'backup')
+        self.config = os.path.join(self.backup_path, 'backup.cfg')
         self.dir_hash = {}
 
     def backup(self, orig_path):
@@ -19,16 +20,12 @@ class EastwindConfigManager:
         hashed_folder = utils.hash_name(orig_path)
         dest_path = os.path.join(self.backup_path, hashed_folder)
         try:
-            os.mkdir(dest_path)
+            os.makedirs(dest_path)
         except OSError: pass
 
-        if os.path.isdir(orig_path):
-            folder = os.path.basename(os.path.normpath(orig_path))
-            dest_dir = os.path.join(dest_path, folder)
-            shutil.copytree(orig_path, dest_dir)
-        else:
-            shutil.copy2(orig_path, dest_path)
-        #TODO: may raise error when orig_path not available
+        tar_file = tarfile.open(os.path.join(dest_path,'backup.tar.gz'), 'w:gz')
+        tar_file.add(orig_path)
+        tar_file.close()
 
         self.dir_hash[hashed_folder] = os.path.dirname(os.path.normpath(orig_path))
 

@@ -26,6 +26,9 @@ def hash_name(name):
     return hashlib.sha1(unhashed).hexdigest()
 
 def slog(level, msg):
+    '''
+    Command line logging interface for Eastwind
+    '''
     prefix = { 'DEBUG'    : '\033[1;32m',
                'INFO'     : '\033[1;34m',
                'WARNNING' : '\033[1;33m',
