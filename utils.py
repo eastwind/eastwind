@@ -12,13 +12,13 @@ import time
 ROOT_PATH = '~/.config/eastwind/'
 
 def app_path(path):
+    """ Generate and make path for app """
     total_path = os.path.join(os.path.expanduser(ROOT_PATH), path)
     dir_path = os.path.dirname(total_path)
     try:
         os.mkdir(dir_path)
     except OSError: pass
     return total_path
-
 
 def hash_name(name):
     """ Hashing a name for the temp folder """
