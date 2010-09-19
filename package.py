@@ -51,6 +51,9 @@ class EastwindPackage:
             Dump a EastwindPackage to a single package
             pkg_path: path to the target .eastwind file
         """
+        for action in self.config.actions:
+            if action.type == 'config':
+                self.config_manager.backup(action.arg)
         self.config.dump(os.path.join(self.base_path, 'control'))
         self.config_manager.dump()
         tar = tarfile.open(os.path.expanduser(pkg_path), 'w:gz')
@@ -69,9 +72,9 @@ class EastwindPackage:
         elif action == 'install':
             self.pkg_manager.install([arg])
         elif action == 'config':
-            self.config_manager.recover([arg])
+            self.config_manager.recover(arg)
         elif action == 'exec':
-            pass
+            os.system(arg)
         elif action == 'download':
             pass
         else:
