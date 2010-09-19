@@ -12,7 +12,7 @@ import time
 ROOT_PATH = '~/.config/eastwind/'
 
 def app_path(path):
-    total_path = os.path.expanduser(ROOT_PATH + path)
+    total_path = os.path.join(os.path.expanduser(ROOT_PATH), path)
     dir_path = os.path.dirname(total_path)
     try:
         os.mkdir(dir_path)
