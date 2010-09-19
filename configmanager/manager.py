@@ -32,7 +32,12 @@ class EastwindConfigManager:
 
     def recover(self):
         """ Copy the backed file to that path. """
-        pass
+        with open(self.config, 'r') as f:
+            self.dir_hash = json.load(f)
+
+        for k,v in self.dir_hash:
+            pass
+            #TODO: need to copy back
 
     def dump(self):
         """ Dump the hash => path info to a json """
