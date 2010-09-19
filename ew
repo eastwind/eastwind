@@ -21,5 +21,5 @@ class Eastwind:
             pass
 
 if __name__ == "__main__":
-    EastWind()
+    Eastwind()
 

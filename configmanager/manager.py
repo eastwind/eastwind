@@ -4,7 +4,7 @@
 
 import utils
 import os
-import shutil
+import json
 import tarfile
 
 class EastwindConfigManager:
@@ -12,16 +12,17 @@ class EastwindConfigManager:
 
     def __init__(self, backup_path):
         self.backup_path = backup_path
-        self.config = os.path.join(self.backup_path, 'backup.cfg')
+        self.config = os.path.join(self.backup_path, 'backup')
         self.dir_hash = {}
         self.path_hash = {}
 
     def backup(self, orig_path):
         """ Backup the files to destination. """
         hashed_file = utils.hash_name(orig_path)
-        backup_path = os.path.join(dest_path, hashed_file)
+        backup_path = os.path.join(self.backup_path, hashed_file)
         tar_file = tarfile.open(backup_path, 'w:gz')
-        tar_file.add(orig_path)
+        tar_name = os.path.basename(os.path.normpath(orig_path))
+        tar_file.add(os.path.expanduser(orig_path), tar_name)
         tar_file.close()
 
         self.dir_hash[hashed_file] = os.path.dirname(os.path.normpath(orig_path))
