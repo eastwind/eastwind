@@ -30,14 +30,12 @@ class EastwindConfigManager:
 
         self.dir_hash[hashed_folder] = os.path.dirname(os.path.normpath(orig_path))
 
-    def recover(self):
+    def recover(self, hashkey):
         """ Copy the backed file to that path. """
         with open(self.config, 'r') as f:
             self.dir_hash = json.load(f)
 
-        for k,v in self.dir_hash:
-            pass
-            #TODO: need to copy back
+        #TODO: need to copy back
 
     def dump(self):
         """ Dump the hash => path info to a json """
