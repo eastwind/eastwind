@@ -18,24 +18,25 @@ class EastwindConfigManager:
 
     def backup(self, orig_path):
         """ Backup the files to destination. """
-        hashed_folder = utils.hash_name(orig_path)
-        dest_path = os.path.join(self.backup_path, hashed_folder)
-        try:
-            os.makedirs(dest_path)
-        except OSError: pass
-
-        tar_file = tarfile.open(os.path.join(dest_path,'backup.tar.gz'), 'w:gz')
+        hashed_file = utils.hash_name(orig_path)
+        backup_path = os.path.join(dest_path, hashed_file)
+        tar_file = tarfile.open(backup_path, 'w:gz')
         tar_file.add(orig_path)
         tar_file.close()
 
-        self.dir_hash[hashed_folder] = os.path.dirname(os.path.normpath(orig_path))
-        self.path_hash[orig_path] = hashed_folder
+        self.dir_hash[hashed_file] = os.path.dirname(os.path.normpath(orig_path))
+        self.path_hash[orig_path] = hashed_file
 
     def recover(self, orig_path):
         """ Copy the backed file to that path. """
         with open(self.config, 'r') as f:
             self.dir_hash, self.path_hash = json.load(f)
-            #TODO: recover self.path_hash[orig_path] to self.dir_hash[self.path_hash[orig_path]]
+            hashed_file = self.path_hash[orig_path]
+            recover_path = self.dir_hash[hashed_file]
+            from_path = os.path.join(self.backup, hashed_file)
+            tar_file = tarfile.open(from_path, 'r:gz')
+            tar_file.extractall(recover_path)
+            tar_file.close()
 
     def dump(self):
         """ Dump the hash => path info to a json """
