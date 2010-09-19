@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+
+import sys
+from package import EastwindPackage
+
+class Eastwind:
+    """ Command line interface for eastwin """
+
+    def __init__(self):
+        self.handle(sys.argv[1], sys.argv[2:])
+
+    def handle(self, action, arg):
+        if action == 'pack':
+            pkg = EastwindPackage(arg[0])
+            pkg.pack(arg[1])
+        elif action == 'unpack':
+            pkg = EastwindPackage.extract(arg[0])
+            pkg.unpack()
+        else:
+            pass
+
+if __name__ == "__main__":
+    EastWind()
+
