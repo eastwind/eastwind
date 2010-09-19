@@ -14,9 +14,9 @@ class EastwindPackage:
     def __init__(self, config, hash_key=''):
         """
             Initialize an EastwindPackage for install/dump
-            config: a instance of EastwindSet
+            config: path to config file
         """
-        self.config = config
+        self.config = EastwindSet(config)
         if hash_key == '':
             self.hash = utils.hash_name(self.config.name)
         else:
