@@ -26,18 +26,16 @@ def hash_name(name):
     return hashlib.sha1(unhashed).hexdigest()
 
 def slog(level, msg):
-    if level == 'DEBUG':
-        prefix = ''
-    elif level == 'INFO':
-        prefix = ''
-    elif level == 'WARNNING':
-        prefix = ''
-    elif level == 'ERROR':
-        prefix = ''
-    elif level == 'FATAL':
-        prefix = ''
+    prefix = { 'DEBUG'    : '\033[1;32m',
+               'INFO'     : '\033[1;34m',
+               'WARNNING' : '\033[1;33m',
+               'ERROR'    : '\033[1;31m',
+               'FATAL'    : '\033[1;37;41m' };
 
-    print >> sys.stderr, '%s%s\033[m' % (prefix, msg)
+    print >> sys.stderr, '%s[%s]\033[m %s' % (prefix[level], level, msg)
+
+    if 'FATAL' == level:
+        sys.exit(1)
 
 def need_root_access(name):
     '''
