@@ -34,6 +34,7 @@ class EastwindPackage:
         hash_name = utils.hash_name(pkg_path)
         dest_dir = utils.app_path(os.path.join('package', hash_name))
         tar.extractall(dest_dir)
+        tar.close()
 
         config_file = os.path.join(dest_dir, 'control')
         config = EastwindSet(config_file)
@@ -52,7 +53,10 @@ class EastwindPackage:
         """
         self.config.dump(os.path.join(self.base_path, 'control'))
         self.config_manager.dump()
-        #TODO: tar to a single file
+        tar = tarfile.open(os.path.expanduser(pkg_path), 'w:gz')
+        for item in os.listdir(self.base_path):
+            tar.add(item)
+        tar.close()
 
     def __react(self, action, arg):
         """
