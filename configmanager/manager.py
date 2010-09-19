@@ -14,7 +14,6 @@ class EastwindConfigManager:
         self.backup_path = backup_path
         self.config = os.path.join(self.backup_path, 'backup')
         self.dir_hash = {}
-        self.path_hash = {}
 
     def backup(self, orig_path):
         """ Backup the files to destination. """
@@ -24,16 +23,15 @@ class EastwindConfigManager:
         tar_name = os.path.basename(os.path.normpath(orig_path))
         tar_file.add(os.path.expanduser(orig_path), tar_name)
         tar_file.close()
-
-        self.dir_hash[hashed_file] = os.path.dirname(os.path.normpath(orig_path))
-        self.path_hash[orig_path] = hashed_file
+        # mapping original path to hashed file
+        self.dir_hash[orig_path] = hashed_file
 
     def recover(self, orig_path):
         """ Copy the backed file to that path. """
         with open(self.config, 'r') as f:
-            self.dir_hash, self.path_hash = json.load(f)
-            hashed_file = self.path_hash[orig_path]
-            recover_path = self.dir_hash[hashed_file]
+            self.dir_hash = json.load(f)
+            hashed_file = self.dir_hash[orig_path]
+            recover_path = os.path.dirname(os.path.normpath(orig_path))
             from_path = os.path.join(self.backup_path, hashed_file)
             tar_file = tarfile.open(from_path, 'r:gz')
             tar_file.extractall(os.path.expanduser(recover_path))
@@ -42,5 +40,5 @@ class EastwindConfigManager:
     def dump(self):
         """ Dump the hash => path info to a json """
         with open(self.config, "w") as f:
-            json.dump([self.dir_hash, self.path_hash], f, sort_keys=True, indent=4)
+            json.dump(self.dir_hash, f, sort_keys=True, indent=4)
 
