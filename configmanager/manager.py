@@ -19,7 +19,9 @@ class EastwindConfigManager:
         """ Backup the files to destination. """
         hashed_folder = utils.hash_name(orig_path)
         dest_path = os.path.join(self.backup_path, hashed_folder)
-        os.mkdir(dest_path) #TODO: fix exception
+        try:
+            os.mkdir(dest_path)
+        except OSError: pass
 
         if os.path.isdir(orig_path):
             folder = os.path.basename(os.path.normpath(orig_path))
