@@ -6,13 +6,24 @@ import logging
 import os
 import subprocess
 import sys
+import hashlib
+import time
 
-CONFIG_DIR = os.path.expanduser('~/.config/eastwind')
-LOG_FILE = os.path.expanduser('~/.config/eastwind/eastwind.log')
+ROOT_PATH = '~/.config/eastwind/'
 
-try:
-    os.mkdir(CONFIG_DIR)
-except OSError: pass
+def app_path(path):
+    total_path = os.path.expanduser(ROOT_PATH + path)
+    dir_path = os.path.dirname(total_path)
+    try:
+        os.mkdir(dir_path)
+    except OSError: pass
+    return total_path
+
+
+def hash_name(name):
+    """ Hashing a name for the temp folder """
+    unhashed = "%s-%f" % (name, time.time())
+    return hashlib.sha1(unhashed).hexdigest()
 
 def slog(level, msg):
     if level == 'DEBUG':
@@ -34,3 +45,4 @@ def need_root_access(name):
     '''
     if not 0 ==  os.geteuid():
         subprocess.Popen('sudo -v', shell=True).wait()
+

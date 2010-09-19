@@ -1,7 +1,7 @@
 """
     Handler for eastwind package
 """
-
+import utils
 from pkgmanager.manager import EastwindPkgManager
 
 class EastwindPackage:
@@ -16,6 +16,7 @@ class EastwindPackage:
         self.config_manager = EastwindConfigManager()
         #TODO: EastwindConfigManager not implemented, or maybe this is not needed?
         self.config = config
+        self.hash = utils.hash_name(self.config.name)
 
     def extract(self, pkg_path):
         """
