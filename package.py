@@ -37,8 +37,7 @@ class EastwindPackage:
         tar.close()
 
         config_file = os.path.join(dest_dir, 'control')
-        config = EastwindSet(config_file)
-        return EastwindPackage(config, hash_name)
+        return EastwindPackage(config_file, hash_name)
     extract = classmethod(extract)
 
     def unpack(self):

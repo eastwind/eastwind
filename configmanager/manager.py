@@ -34,9 +34,9 @@ class EastwindConfigManager:
             self.dir_hash, self.path_hash = json.load(f)
             hashed_file = self.path_hash[orig_path]
             recover_path = self.dir_hash[hashed_file]
-            from_path = os.path.join(self.backup, hashed_file)
+            from_path = os.path.join(self.backup_path, hashed_file)
             tar_file = tarfile.open(from_path, 'r:gz')
-            tar_file.extractall(recover_path)
+            tar_file.extractall(os.path.expanduser(recover_path))
             tar_file.close()
 
     def dump(self):
