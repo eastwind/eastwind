@@ -2,7 +2,7 @@
 #-*- coding:utf-8 -*-
 
 import sys
-from utils import ROOT_PATH
+import utils
 from package import EastwindPackage
 from pkgmanager.manager import EastwindPkgManager
 
@@ -30,7 +30,7 @@ class Eastwind:
     def install(self, pkgs):
         if 0 == self.pkg_manager.install_interactive(pkgs):
             try:
-                with open(ROOT_PATH + 'installed', 'r') as f:
+                with open(utils.app_path('installed'), 'r') as f:
                     lines = f.readlines()
             except IOError:
                 lines = []
@@ -41,14 +41,14 @@ class Eastwind:
                     lines.append(pkg)
             lines.sort()
 
-            with open(ROOT_PATH + 'installed', 'w') as f:
+            with open(utils.app_path('installed'), 'w') as f:
                 for pkg in lines:
                     f.write(pkg)
 
     def remove(self, pkgs):
         if 0 == self.pkg_manager.purge_interactive(pkgs):
             try:
-                with open(ROOT_PATH + 'installed', 'r') as f:
+                with open(utils.app_path('installed'), 'r') as f:
                     lines = f.readlines()
             except IOError:
                 lines = []
@@ -58,7 +58,7 @@ class Eastwind:
                 if pkg in lines:
                     lines.remove(pkg)
 
-            with open(ROOT_PATH + 'installed', 'w') as f:
+            with open(utils.app_path('installed'), 'w') as f:
                 for pkg in lines:
                     f.write(pkg)
 

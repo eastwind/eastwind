@@ -9,7 +9,7 @@ import sys
 import hashlib
 import time
 
-ROOT_PATH = os.path.expanduser('~/.config/eastwind/')
+ROOT_PATH = '~/.config/eastwind/'
 
 def app_path(path):
     """ Generate and make path for app """
