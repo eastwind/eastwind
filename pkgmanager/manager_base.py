@@ -13,10 +13,12 @@ class EastwindPkgMangerSkeleton:
         raise NotImplementedError
 
     def install_interactive(self, pkgs):
-        # TODO: Add pkgs to Eastwind database
         raise NotImplementedError
 
     def purge(self, pkgs):
+        raise NotImplementedError
+
+    def purge_interactive(self, pkgs):
         raise NotImplementedError
 
     def add_external_sources(self, args):

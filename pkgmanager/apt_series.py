@@ -29,8 +29,9 @@ class EastwindPkgMangerAPT(EastwindPkgMangerSkeleton):
 
     def install_interactive(self, pkgs):
         utils.need_root_access('apt-get install')
-        handle = subprocess.Popen('sudo apt-get %s' % (" ".join(pkgs)),
+        ret = subprocess.Popen('sudo apt-get install %s' % (" ".join(pkgs)),
                                   shell=True).wait()
+        return ret
 
     def purge(self, pkgs):
         utils.need_root_access('apt-get remove')
@@ -39,11 +40,19 @@ class EastwindPkgMangerAPT(EastwindPkgMangerSkeleton):
                                   stdin=subprocess.PIPE,
                                   shell=True)
         stdout, stderr = handle.communicate('y\n')
-        handle = subprocess.Popen('sudo apt-get autoremove --purge %s'
-                                  % (" ".join(pkgs)),
+        handle = subprocess.Popen('sudo apt-get autoremove --purge',
                                   stdin=subprocess.PIPE,
                                   shell=True)
         stdout, stderr = handle.communicate('y\n')
+
+    def purge_interactive(self, pkgs):
+        utils.need_root_access('apt-get remove')
+        ret = subprocess.Popen('sudo apt-get remove --purge %s' % 
+                               (" ".join(pkgs)), shell=True).wait()
+        if 0 == ret:
+            subprocess.Popen('sudo apt-get autoremove --purge',
+                                      shell=True).wait()
+        return ret
 
     def add_external_sources(self, sources):
         utils.need_root_access('add-apt-repository')

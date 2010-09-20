@@ -12,21 +12,22 @@ class EastwindPkgManager:
         '''
         Guess the target package management system and assign a agent to it
         '''
-        pass
+        # set to APT for now
+        self.agent = EastwindPkgMangerAPT()
 
     def update(self):
         '''
         Update package list
         '''
         print 'Updating package list...'
-        self.agent.update()
+        return self.agent.update()
 
     def upgrade(self):
         '''
         Upgrade packages
         '''
         print 'Upgrading packages...'
-        self.agent.upgrade()
+        return self.agent.upgrade()
 
     def install(self, pkgs):
         '''
@@ -34,7 +35,7 @@ class EastwindPkgManager:
         pkgs: a list containning packages to install
         '''
         print 'Installing %s...' % (' '.join(pkgs))
-        self.agent.install(pkgs)
+        return self.agent.install(pkgs)
 
     def install_interactive(self, pkgs):
         '''
@@ -42,7 +43,7 @@ class EastwindPkgManager:
         pkgs: a list containning packages to install, pkgs will be add to
               Eastwind database for further manipulation
         '''
-        self.agent.install_interactive(pkgs)
+        return self.agent.install_interactive(pkgs)
 
     def purge(self, pkgs):
         '''
@@ -51,7 +52,15 @@ class EastwindPkgManager:
               configurations
         '''
         print 'Purging %s...' % (' '.join(pkgs))
-        self.agent.purge(pkgs)
+        return self.agent.purge(pkgs)
+
+    def purge_interactive(self, pkgs):
+        '''
+        Purge interactively
+        pkgs: a list containning packages to install, pkgs will be remove from
+              Eastwind database
+        '''
+        return self.agent.purge_interactive(pkgs)
 
     def add_external_sources(self, sources):
         '''
@@ -59,4 +68,4 @@ class EastwindPkgManager:
         sources: a list of sources to add
         '''
         print 'Adding external sources: %s' % sources
-        self.agent.add_external_sources(sources)
+        return self.agent.add_external_sources(sources)
