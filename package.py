@@ -16,7 +16,7 @@ class EastwindPackage:
             Initialize an EastwindPackage for install/dump
             config: path to config file
         """
-        self.config = EastwindSet(config)
+        self.config = EastwindSet(os.path.expanduser(config))
         if hash_key == '':
             self.hash = utils.hash_name(self.config.name)
         else:
