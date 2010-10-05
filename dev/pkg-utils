@@ -1,7 +1,7 @@
 #!/bin/bash
 
-PKG_DIR=$HOME/Public
 owd=`pwd`
+PKG_DIR=${owd}/build
 package=${owd##/*/}
 
 mkdir -p $PKG_DIR
@@ -23,6 +23,7 @@ echo "Version: $version"
 cd ..
 cp -r $package /tmp/$package-$version
 rm -rf /tmp/$package-$version/dev
+rm -rf /tmp/$package-$version/.git
 mv /tmp/$package-$version $PKG_DIR
 cd $PKG_DIR
 
