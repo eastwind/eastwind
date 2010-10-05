@@ -2,10 +2,11 @@
     Config backup manager
 """
 
-import utils
 import os
 import json
 import tarfile
+
+import eastwind.utils
 
 class EastwindConfigManager:
     """ Manager for config backup/recover """

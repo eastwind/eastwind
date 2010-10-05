@@ -2,7 +2,6 @@
 set -e
 
 # Remove links created by postinst
-rm -rf /usr/bin/ew
 rm -rf /usr/bin/eastwind
 
 #DEBHELPER#

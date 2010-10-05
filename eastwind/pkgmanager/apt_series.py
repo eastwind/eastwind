@@ -4,7 +4,7 @@ Eastwind Package Management Interface APT Implementation
 
 import subprocess
 
-import utils
+import eastwind.utils as utils
 from manager_base import EastwindPkgMangerSkeleton
 
 class EastwindPkgMangerAPT(EastwindPkgMangerSkeleton):
