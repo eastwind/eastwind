@@ -6,7 +6,7 @@ import os
 import json
 import tarfile
 
-import eastwind.utils
+import eastwind.utils as utils
 
 class EastwindConfigManager:
     """ Manager for config backup/recover """
