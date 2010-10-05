@@ -1,0 +1,13 @@
+Source: eastwind
+Section: misc
+Priority: optional
+Maintainer: Andrew Liu <andrewliu33@gmail.com>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 0.1.0 
+Homepage: http://github.com/eastwind/eastwind
+
+Package: eastwind
+Architecture: any
+Depends: ${python:Depends}, ${misc:Depends}
+Description: Tool to make Ubuntu installation easier.
+ Pack and unpack Eastwind packages.
