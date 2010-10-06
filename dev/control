@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Andrew Liu <andrewliu33@gmail.com>
 Build-Depends: cdbs (>=0.4.49), debhelper (>= 5), python-central (>=0.5.6), python-distutils-extra
 XS-Python-Version: >=2.6
-Standards-Version: 0.1.1 
+Standards-Version: 0.1.2 
 Homepage: http://github.com/eastwind/eastwind
 
 Package: eastwind
