@@ -6,14 +6,19 @@ import platform
 
 from apt_series import EastwindPkgMangerAPT
 from yum_series import EastwindPkgMangerYUM
+from pacman_series import EastwindPkgMangerPacman
 
 class EastwindPkgManager:
     def __init__(self):
         '''
         Guess the target package management system and assign a agent to it
         '''
-        # set to APT for now
-        self.agent = EastwindPkgMangerAPT()
+        # Use /etc/issue to identify distributions
+        with open('/etc/issue', 'r') as f:
+            dist = f.read()
+            if dist.rfind('Ubuntu') != -1:
+                self.agent = EastwindPkgMangerAPT()
+            # TODO: other distributions?
 
     def update(self):
         '''
@@ -69,3 +74,4 @@ class EastwindPkgManager:
         '''
         print 'Adding external sources: %s' % sources
         return self.agent.add_external_sources(sources)
+
