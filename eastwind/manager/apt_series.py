@@ -5,9 +5,8 @@ Eastwind Package Management Interface APT Implementation
 import subprocess
 
 import eastwind.utils as utils
-from manager_base import EastwindPkgMangerSkeleton
 
-class EastwindPkgMangerAPT(EastwindPkgMangerSkeleton):
+class EastwindPkgMangerAPT:
     def update(self):
         utils.need_root_access('apt-get update')
         handle = subprocess.Popen('sudo apt-get update',
@@ -47,7 +46,7 @@ class EastwindPkgMangerAPT(EastwindPkgMangerSkeleton):
 
     def purge_interactive(self, pkgs):
         utils.need_root_access('apt-get remove')
-        ret = subprocess.Popen('sudo apt-get remove --purge %s' % 
+        ret = subprocess.Popen('sudo apt-get remove --purge %s' %
                                (" ".join(pkgs)), shell=True).wait()
         if 0 == ret:
             subprocess.Popen('sudo apt-get autoremove --purge',
@@ -60,3 +59,4 @@ class EastwindPkgMangerAPT(EastwindPkgMangerSkeleton):
             print 'Adding %s to system...' % source
             handle = subprocess.Popen('sudo add-apt-repository %s' % source,
                                       shell=True).wait()
+

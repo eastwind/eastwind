@@ -4,9 +4,8 @@
 import utils
 import os
 import tarfile
-from eastwind.pkgmanager.manager import EastwindPkgManager
-from eastwind.configmanager.manager import EastwindConfigManager
-from eastwind.model import EastwindSet, EastwindAction
+from manager import EastwindPkgManager, EastwindConfigManager
+from model import EastwindSet, EastwindAction
 
 class EastwindPackage:
     """ Handles a eastwind package """

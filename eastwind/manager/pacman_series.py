@@ -3,11 +3,9 @@ Eastwind Package Management Interface Pacman Implementation
 '''
 
 import subprocess
-
 import eastwind.utils as utils
-from manager_base import EastwindPkgMangerSkeleton
 
-class EastwindPkgMangerPacman(EastwindPkgMangerSkeleton):
+class EastwindPkgMangerPacman:
     def update(self):
         utils.need_root_access('pacman -Syy')
         handle = subprocess.Popen('sudo pacman -Syy',
@@ -48,3 +46,4 @@ class EastwindPkgMangerPacman(EastwindPkgMangerSkeleton):
 #                                      shell=True).wait()
 
 #TODO AUR
+

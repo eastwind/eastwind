@@ -1,5 +1,5 @@
 '''
-Eastwind Package Management Interface
+Eastwind Package Management Interface And Base class
 '''
 
 import platform
@@ -74,10 +74,4 @@ class _EastwindPkgManager:
         '''
         print 'Adding external sources: %s' % sources
         return self.agent.add_external_sources(sources)
-
-class EastwindPkgManager:
-    singleton = _EastwindPkgManager()
-    def __init__(self):
-        self.__dict__ = EastwindPkgManager.singleton.__dict__
-        self.__class__ = EastwindPkgManager.singleton.__class__
 

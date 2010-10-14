@@ -3,11 +3,9 @@ Eastwind Package Management Interface YUM Implementation
 '''
 
 import subprocess
-
 import eastwind.utils as utils
-from manager_base import EastwindPkgMangerSkeleton
 
-class EastwindPkgMangerYUM(EastwindPkgMangerSkeleton):
+class EastwindPkgMangerYUM:
     def update(self):
         utils.need_root_access('yum update')
         handle = subprocess.Popen('sudo yum update',
@@ -47,3 +45,4 @@ class EastwindPkgMangerYUM(EastwindPkgMangerSkeleton):
 #            print 'Adding %s to system...' % source
 #            handle = subprocess.Popen('sudo add-apt-repository %s' % source,
 #                                      shell=True).wait()
+
