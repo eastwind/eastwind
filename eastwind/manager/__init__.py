@@ -2,8 +2,8 @@
     Singleton classes
 """
 import pkgmanager
+import recordmanager
 from configmanager import EastwindConfigManager
-from recordmanager import EastwindRecordManager
 
 class EastwindPkgManager:
     singleton = pkgmanager._EastwindPkgManager()
@@ -11,9 +11,9 @@ class EastwindPkgManager:
         self.__dict__ = EastwindPkgManager.singleton.__dict__
         self.__class__ = EastwindPkgManager.singleton.__class__
 
-class EastwindPkgManager:
-    singleton = pkgmanager._EastwindPkgManager()
+class EastwindRecordManager:
+    singleton = pkgmanager._EastwindRecordManager()
     def __init__(self):
-        self.__dict__ = EastwindPkgManager.singleton.__dict__
-        self.__class__ = EastwindPkgManager.singleton.__class__
+        self.__dict__ = EastwindRecordManager.singleton.__dict__
+        self.__class__ = EastwindRecordManager.singleton.__class__
 
