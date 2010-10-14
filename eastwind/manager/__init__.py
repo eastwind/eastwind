@@ -12,7 +12,7 @@ class EastwindPkgManager:
         self.__class__ = EastwindPkgManager.singleton.__class__
 
 class EastwindRecordManager:
-    singleton = pkgmanager._EastwindRecordManager()
+    singleton = recordmanager._EastwindRecordManager()
     def __init__(self):
         self.__dict__ = EastwindRecordManager.singleton.__dict__
         self.__class__ = EastwindRecordManager.singleton.__class__

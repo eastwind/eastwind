@@ -13,7 +13,7 @@ if program.startswith('./') or program.startswith('bin/'):
 
 import eastwind.utils as utils
 from eastwind.package import EastwindPackage
-from eastwind.pkgmanager.manager import EastwindPkgManager
+from eastwind.manager import EastwindPkgManager, EastwindRecordManager
 
 class Eastwind:
     """ Command line interface for eastwin """
@@ -22,7 +22,6 @@ class Eastwind:
         if len(sys.argv) == 1:
             print >> sys.stderr, 'Usage:', sys.argv[0], '[ACTIONS]'
             sys.exit(1)
-        self.pkg_manager = EastwindPkgManager()
         self.handle(sys.argv[1], sys.argv[2:])
 
     def handle(self, action, arg):
@@ -34,61 +33,27 @@ class Eastwind:
             pkg.unpack()
         elif action == 'record':
             if arg[0] == 'start':
-                pass
+                EastwindRecordManager().start(arg[1])
             elif arg[0] == 'stop':
-                pass
+                EastwindRecordManager().stop()
+            elif arg[0] == 'change':
+                EastwindRecordManager().change(arg[1])
+            else:
+                print >> sys.stderr, 'Record action [%s] is unknown' % arg[0]
         elif action == 'install':
-            self.install(arg)
+            EastwindPkgManager().install(arg)
+            EastwindRecordManager().add({action: ' '.join(arg)})
         elif action == 'remove':
-            self.remove(arg)
+            EastwindPkgManager().remove(arg)
+            EastwindRecordManager().add({action: ' '.join(arg)})
         elif action == 'update':
-            self.update()
+            EastwindPkgManager().update()
+            EastwindRecordManager().add({action: ''})
         elif action == 'upgrade':
-            self.upgrade()
+            EastwindPkgManager().upgrade()
+            EastwindRecordManager().add({action: ''})
         else:
-            pass
-
-    def install(self, pkgs):
-        if 0 == self.pkg_manager.install_interactive(pkgs):
-            try:
-                with open(utils.app_path('installed'), 'r') as f:
-                    lines = f.readlines()
-            except IOError:
-                lines = []
-
-            for pkg in pkgs:
-                pkg = pkg.rstrip('\n') + '\n'
-                if not pkg in lines:
-                    lines.append(pkg)
-            lines.sort()
-
-            with open(utils.app_path('installed'), 'w') as f:
-                for pkg in lines:
-                    f.write(pkg)
-
-    def remove(self, pkgs):
-        if 0 == self.pkg_manager.purge_interactive(pkgs):
-            try:
-                with open(utils.app_path('installed'), 'r') as f:
-                    lines = f.readlines()
-            except IOError:
-                lines = []
-
-            for pkg in pkgs:
-                pkg = pkg.rstrip('\n') + '\n'
-                if pkg in lines:
-                    lines.remove(pkg)
-
-            with open(utils.app_path('installed'), 'w') as f:
-                for pkg in lines:
-                    f.write(pkg)
-
-    def update(self):
-        self.pkg_manager.update()
-
-    def update(self):
-        self.pkg_manager.upgrade()
-
+            print >> sys.stderr, 'Action [%s] is unknown' % action
 
 if __name__ == "__main__":
     Eastwind()
