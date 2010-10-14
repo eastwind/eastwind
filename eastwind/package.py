@@ -70,6 +70,12 @@ class EastwindPackage:
             self.pkg_manager.add_external_sources([arg])
         elif action == 'install':
             self.pkg_manager.install([arg])
+        elif action == 'remove':
+            self.pkg_manager.remove()
+        elif action == 'update':
+            self.pkg_manager.udpate()
+        elif action == 'upgrade':
+            self.pkg_manager.upgrade()
         elif action == 'config':
             self.config_manager.recover(arg)
         elif action == 'exec':

@@ -32,6 +32,11 @@ class Eastwind:
         elif action == 'unpack':
             pkg = EastwindPackage.extract(arg[0])
             pkg.unpack()
+        elif action == 'record':
+            if arg[0] == 'start':
+                pass
+            elif arg[0] == 'stop':
+                pass
         elif action == 'install':
             self.install(arg)
         elif action == 'remove':
