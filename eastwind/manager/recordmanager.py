@@ -13,22 +13,25 @@ class _EastwindRecordManager:
         self.current_name = None
         if os.path.exists(utils.app_path('record_lock')):
             with open(utils.app_path('record_lock')) as f:
-                self.current_name = r.read().rstrip()
-            self.__generate_file()
-            self.set = model.EastwindSet(self.current_file)
-
-    def __generate_file(self):
-        self.current_file = utils.app_path('record/%s' % self.current_name)
+                self.current_name = f.read().rstrip()
+            self.current_file = utils.record_path(self.current_name)
+            try:
+                self.set = model.EastwindSet(self.current_file)
+            except IOError:
+                os.remove(utils.app_path('record_lock'))
 
     def start(self, name):
         if self.current_name:
             # error handling...
             print >> sys.stderr, "There is a recording already."
             return
-        with open(utils.app_path('record_lock')) as f:
+        with open(utils.app_path('record_lock'), 'w') as f:
             f.write(name)
         self.current_name = name
-        self.__generate_file()
+        self.current_file = utils.record_path(self.current_name)
+        if not os.path.exists(self.current_file):
+            model.EastwindSet.touch(self.current_file, self.current_name)
+        self.set = model.EastwindSet(self.current_file)
 
     def add(self, action):
         if not self.current_name:
@@ -43,6 +46,7 @@ class _EastwindRecordManager:
             print >> sys.stderr, "There is no record to be stopped."
             return
         os.remove(utils.app_path('record_lock'))
+        self.current_name = None
 
     def change(self, name):
         self.stop()

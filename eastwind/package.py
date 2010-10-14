@@ -24,6 +24,7 @@ class EastwindPackage:
         self.config_manager = EastwindConfigManager(self.base_path)
         self.pkg_manager = EastwindPkgManager()
 
+    @classmethod
     def extract(self, pkg_path):
         """
             Extracting an EastwindPackage and turn it to a instance
@@ -37,7 +38,6 @@ class EastwindPackage:
 
         config_file = os.path.join(dest_dir, 'control')
         return EastwindPackage(config_file, hash_name)
-    extract = classmethod(extract)
 
     def unpack(self):
         """ Execute the actions in the package """

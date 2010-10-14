@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import sys
-from os.path import dirname, abspath, realpath
-
-program = sys.argv[0]
-LANUCH_DIR = dirname(abspath(sys.path[0]))
+import sys, os
 
 # If launched from source directory
-if program.startswith('./') or program.startswith('bin/'):
-    sys.path.insert(0, LANUCH_DIR)
+if sys.argv[0].startswith('./') or sys.argv[0].startswith('bin/'):
+    sys.path.insert(0, os.path.dirname(os.path.abspath(sys.path[0])))
 
 import eastwind.utils as utils
 from eastwind.package import EastwindPackage
@@ -19,31 +15,46 @@ class Eastwind:
     """ Command line interface for eastwin """
 
     def __init__(self):
-        if len(sys.argv) == 1:
-            print >> sys.stderr, 'Usage:', sys.argv[0], '[ACTIONS]'
-            sys.exit(1)
+        self.__check_arg('', ['ACTION'], sys.argv[1:])
         self.handle(sys.argv[1], sys.argv[2:])
+
+    def __check_arg(self, req_action, req_arg, arg):
+        if len(arg) < len(req_arg):
+            arg_list = ' '.join(['[%s]' % s for s in req_arg])
+            print >> sys.stderr, 'Usage:', sys.argv[0], req_action, arg_list
+            sys.exit(1)
 
     def handle(self, action, arg):
         if action == 'pack':
+            self.__check_arg('pack', ['CONFIG', 'PACK'], arg)
             pkg = EastwindPackage(arg[0])
             pkg.pack(arg[1])
+        elif action == 'pack-record':
+            self.__check_arg('pack-record', ['RECORD', 'PACK'], arg)
+            pkg = EastwindPackage(utils.record_path(arg[0]))
+            pkg.pack(arg[1])
         elif action == 'unpack':
+            self.__check_arg('unpack', ['PACK'], arg)
             pkg = EastwindPackage.extract(arg[0])
             pkg.unpack()
         elif action == 'record':
+            self.__check_arg('record', ['ACTION'], arg)
             if arg[0] == 'start':
+                self.__check_arg('record start', ['NAME'], arg[1:])
                 EastwindRecordManager().start(arg[1])
             elif arg[0] == 'stop':
                 EastwindRecordManager().stop()
             elif arg[0] == 'change':
+                self.__check_arg('record change', ['NAME'], arg[1:])
                 EastwindRecordManager().change(arg[1])
             else:
                 print >> sys.stderr, 'Record action [%s] is unknown' % arg[0]
         elif action == 'install':
+            self.__check_arg('install', ['PACKAGE'], arg)
             EastwindPkgManager().install(arg)
             EastwindRecordManager().add({action: ' '.join(arg)})
         elif action == 'remove':
+            self.__check_arg('remove', ['PACKAGE'], arg)
             EastwindPkgManager().remove(arg)
             EastwindRecordManager().add({action: ' '.join(arg)})
         elif action == 'update':

@@ -36,6 +36,11 @@ class EastwindSet:
                 for action in data['actions']:
                     self.actions.append(EastwindAction(action))
 
+    @classmethod
+    def touch(self, filename, name=''):
+        with open(filename, "w") as f:
+            json.dump({'name': name, 'actions': []}, f, sort_keys=True, indent=4)
+
     def to_dict(self):
         """ Convert to dict format """
         return {'name': self.name,

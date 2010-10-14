@@ -20,6 +20,9 @@ def app_path(path):
     except OSError: pass
     return total_path
 
+def record_path(name):
+    return app_path('record/%s' % name)
+
 def hash_name(name):
     """ Hashing a name for the temp folder """
     unhashed = "%s-%f" % (name, time.time())
