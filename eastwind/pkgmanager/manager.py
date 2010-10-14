@@ -8,7 +8,7 @@ from apt_series import EastwindPkgMangerAPT
 from yum_series import EastwindPkgMangerYUM
 from pacman_series import EastwindPkgMangerPacman
 
-class EastwindPkgManager:
+class _EastwindPkgManager:
     def __init__(self):
         '''
         Guess the target package management system and assign a agent to it
@@ -74,4 +74,10 @@ class EastwindPkgManager:
         '''
         print 'Adding external sources: %s' % sources
         return self.agent.add_external_sources(sources)
+
+class EastwindPkgManager:
+    singleton = _EastwindPkgManager()
+    def __init__(self):
+        self.__dict__ = EastwindPkgManager.singleton.__dict__
+        self.__class__ = EastwindPkgManager.singleton.__class__
 

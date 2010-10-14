@@ -8,7 +8,7 @@ import tarfile
 
 import eastwind.utils as utils
 
-class EastwindConfigManager:
+class _EastwindConfigManager:
     """ Manager for config backup/recover """
 
     def __init__(self, backup_path):
@@ -42,4 +42,10 @@ class EastwindConfigManager:
         """ Dump the hash => path info to a json """
         with open(self.config, "w") as f:
             json.dump(self.dir_hash, f, sort_keys=True, indent=4)
+
+class EastwindConfigManager:
+    singleton = _EastwindConfigManager()
+    def __init__(self):
+        self.__dict__ = EastwindConfigManager.singleton.__dict__
+        self.__class__ = EastwindConfigManager.singleton.__class__
 
