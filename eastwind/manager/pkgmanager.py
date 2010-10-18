@@ -13,12 +13,13 @@ class _EastwindPkgManager:
         '''
         Guess the target package management system and assign a agent to it
         '''
-        # Use /etc/issue to identify distributions
-        with open('/etc/issue', 'r') as f:
-            dist = f.read()
-            if dist.rfind('Ubuntu') != -1:
-                self.agent = EastwindPkgMangerAPT()
-            # TODO: other distributions?
+        distro = platform.linux_distribution().lower()
+        if 'ubuntu' in distro:
+            self.agent = EastwindPkgMangerAPT()
+        elif 'fedora' in distro or 'centos' in distro:
+            self.agent = EastwindPkgMangerYUM()
+        elif 'arch' in distro:
+            self.agent = EastwindPkgMangerPacman()
 
     def update(self):
         '''
