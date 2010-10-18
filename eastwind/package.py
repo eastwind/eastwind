@@ -2,7 +2,7 @@
     Handler for eastwind package
 """
 import utils
-import os
+import os.path
 import tarfile
 from manager import EastwindPkgManager, EastwindConfigManager
 from model import EastwindSet, EastwindAction
@@ -30,6 +30,7 @@ class EastwindPackage:
             Extracting an EastwindPackage and turn it to a instance
             pkg_path: path to EastwindPackage, will expanded to user path
         """
+        self.pkg_name = os.path.basename(pkg_path)
         tar = tarfile.open(os.path.expanduser(pkg_path), 'r:gz')
         hash_name = utils.hash_name(pkg_path)
         dest_dir = utils.app_path(os.path.join('package', hash_name))
@@ -41,8 +42,33 @@ class EastwindPackage:
 
     def unpack(self):
         """ Execute the actions in the package """
+        action_friendly = {
+            'source': 'Add external sources',
+            'install': 'Install',
+            'remove': 'Remove',
+            'update': 'Update package list',
+            'upgrade': 'Upgrade installed packages',
+            'config': 'Add new configuration',
+            'exec': 'Execute external command',
+            'download': 'Download files'
+        }
+        print 'Package name: %s' % self.pkg_name
+        print 'The following actions are going to be executed:'
         for action in self.config.actions:
+            print '%s: %s' % (action_friendly[action.type], action.arg)
+
+        print 'Do you want to proceed? [y/N]'
+        res = raw_input()
+        if 'n' in res.lower():
+            print 'Aborted.'
+            return
+
+        total = len(self.config.actions)
+        for index, action in enumerate(self.config.actions):
+            utils.slog('INFO', 'Executing %d of %d actions ...' %
+                       (index + 1, total))
             self.__react(action.type, action.arg)
+            utils.slog('INFO', 'Done.')
 
     def pack(self, pkg_path):
         """
@@ -78,7 +104,7 @@ class EastwindPackage:
         elif action == 'config':
             self.config_manager.recover(arg)
         elif action == 'exec':
-            os.system(arg)
+            subprocess.Popen(arg, shell=True).wait()
         elif action == 'download':
             pass
         else:
