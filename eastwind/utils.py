@@ -38,7 +38,7 @@ def slog(level, msg):
                'ERROR'    : '\033[1;31m',
                'FATAL'    : '\033[1;37;41m' };
 
-    print >> sys.stderr, '%s[%s]\033[m %s' % (prefix[level], level, msg)
+    print >> sys.stderr, '%s%s\033[m' % (prefix[level], msg)
 
     if 'FATAL' == level:
         sys.exit(1)

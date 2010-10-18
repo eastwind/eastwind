@@ -57,8 +57,11 @@ class EastwindPackage:
         for action in self.config.actions:
             print '%s: %s' % (action_friendly[action.type], action.arg)
 
-        print 'Do you want to proceed? [y/N]'
-        res = raw_input()
+        print 'Do you want to proceed? [y/N]',
+        try:
+            res = raw_input()
+        except KeyboardInterrupt:
+            res = 'n'
         if 'n' in res.lower():
             print 'Aborted.'
             return
@@ -67,8 +70,8 @@ class EastwindPackage:
         for index, action in enumerate(self.config.actions):
             utils.slog('INFO', 'Executing %d of %d actions ...' %
                        (index + 1, total))
+            print '%s: %s' % (action.type, action.arg)
             self.__react(action.type, action.arg)
-            utils.slog('INFO', 'Done.')
 
     def pack(self, pkg_path):
         """
