@@ -16,7 +16,7 @@ If there is any issues or suggestions, please file an issue in
 *Note:* on Karmic use `add-apt-repository` instead of `apt-add-repository`
 
 ### Other Distribution
-     git glone git://github.com/eastwind/eastwind.git
+     git clone git://github.com/eastwind/eastwind.git
      eastwind/bin/eastwind          # execute Eastwind
 
 ## Setup Config
@@ -29,7 +29,6 @@ should be provided, there are two ways to build the file:
           "actions": [
             {"config": "~/.vim"},
             {"config": "~/.vimrc"},
-            {"exec": "rm -rf ~/.vimrc"},
             {"install": "vim vim-latexsuite"}
           ]
         }
