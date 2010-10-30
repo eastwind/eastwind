@@ -62,7 +62,7 @@ class Eastwind:
             EastwindRecordManager().add({action: ' '.join(arg)})
         elif action == 'source':
             self.__check_arg('source', ['SOURCE'], arg)
-            EastwindPkgManager().source(arg)
+            EastwindPkgManager().add_external_sources(arg)
             EastwindRecordManager().add({action: ' '.join(arg)})
         elif action == 'update':
             EastwindPkgManager().update()
