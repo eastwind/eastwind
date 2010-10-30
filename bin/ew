@@ -57,6 +57,13 @@ class Eastwind:
             self.__check_arg('remove', ['PACKAGE'], arg)
             EastwindPkgManager().remove(arg)
             EastwindRecordManager().add({action: ' '.join(arg)})
+        elif action == 'config':
+            self.__check_arg('config', ['CONFIG'], arg)
+            EastwindRecordManager().add({action: ' '.join(arg)})
+        elif action == 'source':
+            self.__check_arg('source', ['SOURCE'], arg)
+            EastwindPkgManager().source(arg)
+            EastwindRecordManager().add({action: ' '.join(arg)})
         elif action == 'update':
             EastwindPkgManager().update()
             EastwindRecordManager().add({action: ''})
