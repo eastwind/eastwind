@@ -101,7 +101,7 @@ class EastwindPackage:
         elif action == 'remove':
             self.pkg_manager.remove()
         elif action == 'update':
-            self.pkg_manager.udpate()
+            self.pkg_manager.update()
         elif action == 'upgrade':
             self.pkg_manager.upgrade()
         elif action == 'config':
