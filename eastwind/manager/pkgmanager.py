@@ -14,7 +14,7 @@ class _EastwindPkgManager:
         Guess the target package management system and assign a agent to it
         '''
         distro = platform.linux_distribution()
-        if 'Ubuntu' in distro:
+        if 'Ubuntu' in distro or 'Debian' in distro:
             self.agent = EastwindPkgMangerAPT()
         elif 'Fedora' in distro or 'centos' in distro:
             self.agent = EastwindPkgMangerYUM()
