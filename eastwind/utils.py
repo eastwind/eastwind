@@ -43,10 +43,13 @@ def slog(level, msg):
     if 'FATAL' == level:
         sys.exit(1)
 
-def need_root_access(name):
+def need_root_access(f):
     '''
     Prompt user for updating timestamp of sudo
     '''
-    if not 0 ==  os.geteuid():
-        subprocess.Popen('sudo -v', shell=True).wait()
+    def decorator(*args):
+        if not 0 ==  os.geteuid():
+            subprocess.Popen('sudo -v', shell=True).wait()
+        return f(*args)
+    return decorator
 

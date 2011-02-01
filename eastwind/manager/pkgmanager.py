@@ -4,6 +4,7 @@ Eastwind Package Management Interface And Base class
 
 import platform
 
+import eastwind.utils as utils
 from apt_series import EastwindPkgMangerAPT
 from yum_series import EastwindPkgMangerYUM
 from pacman_series import EastwindPkgMangerPacman
@@ -21,6 +22,7 @@ class _EastwindPkgManager:
         elif 'Arch' in distro:
             self.agent = EastwindPkgMangerPacman()
 
+    @utils.need_root_access
     def update(self):
         '''
         Update package list
@@ -28,6 +30,7 @@ class _EastwindPkgManager:
         print 'Updating package list...'
         return self.agent.update()
 
+    @utils.need_root_access
     def upgrade(self):
         '''
         Upgrade packages
@@ -35,6 +38,7 @@ class _EastwindPkgManager:
         print 'Upgrading packages...'
         return self.agent.upgrade()
 
+    @utils.need_root_access
     def install(self, pkgs):
         '''
         Install packages
@@ -43,6 +47,7 @@ class _EastwindPkgManager:
         print 'Installing %s...' % (' '.join(pkgs))
         return self.agent.install(pkgs)
 
+    @utils.need_root_access
     def install_interactive(self, pkgs):
         '''
         Install interactively
@@ -51,6 +56,7 @@ class _EastwindPkgManager:
         '''
         return self.agent.install_interactive(pkgs)
 
+    @utils.need_root_access
     def purge(self, pkgs):
         '''
         Remove pkgs
@@ -60,6 +66,7 @@ class _EastwindPkgManager:
         print 'Purging %s...' % (' '.join(pkgs))
         return self.agent.purge(pkgs)
 
+    @utils.need_root_access
     def purge_interactive(self, pkgs):
         '''
         Purge interactively
@@ -68,6 +75,7 @@ class _EastwindPkgManager:
         '''
         return self.agent.purge_interactive(pkgs)
 
+    @utils.need_root_access
     def add_external_sources(self, sources):
         '''
         Add external sources like PPA for Debian or AUR for Arch
