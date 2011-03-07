@@ -8,6 +8,7 @@ class EastwindPkgMangerAPT:
     def update(self):
         handle = subprocess.Popen('sudo apt-get update',
                                   shell=True).wait()
+        stdout, stderr = handle.communicate('y\n')
 
     def upgrade(self):
         handle = subprocess.Popen('sudo apt-get upgrade',
