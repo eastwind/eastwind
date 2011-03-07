@@ -1,3 +1,9 @@
+eastwind (0.2.2-1) maverick; urgency=low
+
+  * Fix exec and update bugs. 
+
+ -- Andrew Liu <andrewliu33@gmail.com>  Mon, 07 Mar 2011 22:22:54 +0800
+
 eastwind (0.2.1-1) maverick; urgency=high
 
   * Fix config and source bugs.
