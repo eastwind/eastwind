@@ -4,6 +4,7 @@
 import utils
 import os.path
 import tarfile
+import subprocess
 from manager import EastwindPkgManager, EastwindConfigManager
 from model import EastwindSet, EastwindAction
 
