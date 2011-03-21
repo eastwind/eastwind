@@ -7,11 +7,12 @@ import subprocess
 class EastwindPkgMangerAPT:
     def update(self):
         handle = subprocess.Popen('sudo apt-get update',
-                                  shell=True).wait()
+                                  shell=True)
         stdout, stderr = handle.communicate('y\n')
 
     def upgrade(self):
         handle = subprocess.Popen('sudo apt-get upgrade',
+                                  stdin=subprocess.PIPE,
                                   shell=True)
         stdout, stderr = handle.communicate('y\n')
 
