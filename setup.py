@@ -5,7 +5,7 @@ from distutils.core import setup
 
 setup(
 	name = 'eastwind',
-	version = '0.2.2',
+	version = '0.2.3',
 	description = 'Tool to make Ubuntu installation easier.',
 	author = 'Andrew Liu',
 	author_email = 'andrewliu33@gmail.com',
